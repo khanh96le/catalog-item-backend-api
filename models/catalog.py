@@ -1,7 +1,8 @@
 from db import db
 import datetime
 
-class StoreModel(db.Model):
+
+class CatalogModel(db.Model):
     __tablename__ = 'stores'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -39,5 +40,3 @@ class StoreModel(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
-
-

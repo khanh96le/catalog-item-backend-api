@@ -1,5 +1,6 @@
 from db import db
 
+
 class ItemModel(db.Model):
     __tablename__ = 'items'
 
@@ -8,7 +9,7 @@ class ItemModel(db.Model):
     price = db.Column(db.Float(precision=2))
 
     store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
-    store = db.relationship('StoreModel')
+    store = db.relationship('CatalogModel')
 
     def __init__(self, name, price, store_id):
         self.name = name
