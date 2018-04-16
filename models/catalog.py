@@ -3,7 +3,7 @@ import datetime
 
 
 class CatalogModel(db.Model):
-    __tablename__ = 'stores'
+    __tablename__ = 'catalogs'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
@@ -17,7 +17,7 @@ class CatalogModel(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'totalItem': self.items.count(),
+            'itemsCount': self.items.count(),
             'lastUpdated': "{}-{}-{}".format(
                 self.lastUpdated.year,
                 self.lastUpdated.month,

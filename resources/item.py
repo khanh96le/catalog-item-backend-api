@@ -2,18 +2,24 @@ from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
 from models.item import ItemModel
 
+
 class Item(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument('price',
-        type=float,
-        required=True,
-        help="This field cannot be left blank!"
-    )
-    parser.add_argument('store_id',
-        type=int,
-        required=True,
-        help="Every item needs a store id."
-    )
+    parser.add_argument('link',
+                        type=str,
+                        required=True,
+                        help="This field cannot be left blank!"
+                        )
+    parser.add_argument('description',
+                        type=str,
+                        required=False,
+                        help="Description."
+                        )
+    parser.add_argument('catalog_id',
+                        type=str,
+                        required=True,
+                        help="Every item needs a catalog id."
+                        )
 
     @jwt_required()
     def get(self, name):
@@ -22,13 +28,10 @@ class Item(Resource):
             return item.json()
         return {'message': 'Item not found'}, 404
 
-    def post(self, name):
-        if ItemModel.find_by_name(name):
-            return {'message': "An item with name '{}' already exists.".format(name)}, 400
-
+    def post(self):
         data = Item.parser.parse_args()
 
-        item = ItemModel(name, **data)
+        item = ItemModel(**data)
 
         try:
             item.save_to_db()
@@ -37,24 +40,29 @@ class Item(Resource):
 
         return item.json(), 201
 
-    def delete(self, name):
-        item = ItemModel.find_by_name(name)
+    def delete(self, id):
+        item = ItemModel.find_by_id(id)
         if item:
             item.delete_from_db()
 
-        return {'message': 'Item deleted'}
+        return {'message': 'Item deleted'}, 204
 
-    def put(self, name):
+    def put(self, id):
         data = Item.parser.parse_args()
 
-        item = ItemModel.find_by_name(name)
+        item = ItemModel.find_by_id(id)
 
         if item is None:
-            item = ItemModel(name, **data)
+            return {'message': 'Item not found'}, 404
         else:
-            item.price = data['price']
+            item.link = data['link']
+            item.description = data['description']
+            item.catalog_id = data['catalog_id']
 
-        item.save_to_db()
+        try:
+            item.save_to_db()
+        except:
+            return {"message": "An error occurred inserting the item."}, 500
 
         return item.json()
 
@@ -62,3 +70,4 @@ class Item(Resource):
 class ItemList(Resource):
     def get(self):
         return {'items': [x.json() for x in ItemModel.query.all()]}
+

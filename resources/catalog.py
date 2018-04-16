@@ -20,8 +20,9 @@ class Catalog(Resource):
         data = Catalog.parser.parse_args()
         name = data['name']
         if CatalogModel.find_by_name(name):
-            return {'message': "A catalog with name '{}' already exists.".format(
-                name)}, 400
+            return {
+                       'message': "A catalog with name '{}' already exists.".format(
+                           name)}, 400
 
         store = CatalogModel(name)
         try:
@@ -40,8 +41,9 @@ class Catalog(Resource):
 
         name = Catalog.parser.parse_args()['name']
         if CatalogModel.find_by_name(name):
-            return {'message': "A catalog with name '{}' already exists.".format(
-                name)}, 400
+            return {
+                       'message': "A catalog with name '{}' already exists.".format(
+                           name)}, 400
 
         store.name = name
 
@@ -52,15 +54,15 @@ class Catalog(Resource):
 
         return store.json(), 200
 
-
     def delete(self, id):
-        store = CatalogModel.find_by_id(id)
-        if store:
-            store.delete_from_db()
+        catalog = CatalogModel.find_by_id(id)
+        if catalog:
+            catalog.delete_from_db()
 
-        return store.json(), 204
+        return '', 204
 
 
 class CatalogList(Resource):
     def get(self):
-        return {'catalogs': [store.json() for store in CatalogModel.query.all()]}
+        return {
+            'catalogs': [store.json() for store in CatalogModel.query.all()]}
