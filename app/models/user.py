@@ -1,4 +1,3 @@
-import sqlite3
 from db import db
 
 
@@ -27,10 +26,6 @@ class UserModel(db.Model):
             'image_url': self.image_url
         }
 
-    def save_to_db(self):
-        db.session.add(self)
-        db.session.commit()
-
     @classmethod
     def find_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
@@ -38,3 +33,8 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+

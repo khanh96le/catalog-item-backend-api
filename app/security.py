@@ -1,5 +1,8 @@
+"""
+Some decorators use for authenticating requests with `flask_jwt`
+"""
 from werkzeug.security import safe_str_cmp
-from models.user import UserModel
+from app.models.user import UserModel
 
 
 def authenticate(username, password):

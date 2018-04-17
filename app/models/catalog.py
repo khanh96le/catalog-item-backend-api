@@ -1,5 +1,4 @@
 from db import db
-import datetime
 
 
 class CatalogModel(db.Model):
