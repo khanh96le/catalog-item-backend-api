@@ -21,9 +21,9 @@ class Item(Resource):
                         help="Every item needs a catalog id."
                         )
 
-    @jwt_required()
-    def get(self, name):
-        item = ItemModel.find_by_name(name)
+    # @jwt_required(k)
+    def get(self, id):
+        item = ItemModel.find_by_id(id)
         if item:
             return item.json()
         return {'message': 'Item not found'}, 404
@@ -69,5 +69,6 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self):
-        return {'items': [x.json() for x in ItemModel.query.all()]}
+        items = ItemModel.query.order_by(ItemModel.created.desc()).all()
+        return {'items': [item.json() for item in items]}
 
