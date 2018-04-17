@@ -1,3 +1,6 @@
+"""
+Some decorators use for authenticating requests with `flask_jwt`
+"""
 from werkzeug.security import safe_str_cmp
 from app.models.user import UserModel
 

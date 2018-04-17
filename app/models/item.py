@@ -1,5 +1,5 @@
 from db import db
-import re
+from app.utils import extract_video_thumbnail
 
 
 class ItemModel(db.Model):
@@ -19,22 +19,11 @@ class ItemModel(db.Model):
         self.description = description
         self.catalog_id = catalog_id
 
-    def extract_video_id(self, link):
-        regex = r"(youtu\.be\/|youtube\.com\/(watch\?(.*&)?v=|(embed|v)\/))([^\?&\"'>]+)"
-        matches = re.search(regex, link)
-        try:
-            video_id = matches.group(5)
-            img_link = "https://img.youtube.com/vi/{}/2.jpg".format(video_id)
-        except:
-            return "https://img.youtube.com/vi/notexisted/2.jpg"
-
-        return img_link
-
     def json(self):
         return {
             'id': self.id,
             'link': self.link,
-            'img': self.extract_video_id(self.link),
+            'img': extract_video_thumbnail(self.link),
             'description': self.description,
             'catalog': self.catalog.name,
             'created': "{}-{}-{} {}:{}:{}".format(

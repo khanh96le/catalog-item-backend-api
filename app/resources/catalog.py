@@ -13,55 +13,55 @@ class Catalog(Resource):
                         )
 
     def get(self, id):
-        store = CatalogModel.find_by_id(id)
-        if store:
-            return store.json()
+        catalog = CatalogModel.find_by_id(id)
+        if catalog:
+            return catalog.json()
         return {'message': 'Catalog not found'}, 404
 
     def post(self):
         data = Catalog.parser.parse_args()
         name = data['name']
         if CatalogModel.find_by_name(name):
-            return {
-                       'message': "A catalog with name '{}' already exists.".format(
-                           name)}, 400
+            return dict(message="A catalog with name '{}' already exists."
+                        .format(name)), 400
 
-        store = CatalogModel(name)
+        catalog = CatalogModel(name)
         try:
-            store.save_to_db()
+            catalog.save_to_db()
         except:
             return {"message": "An error occurred creating the catalog."}, 500
 
-        return store.json(), 201
+        return catalog.json(), 201
 
     def put(self, id):
-        store = CatalogModel.find_by_id(id)
+        catalog = CatalogModel.find_by_id(id)
 
-        if not store:
-            return {'message': "A catalog with id '{}' is not exist.".format(
-                id)}, 400
+        # check if catalog is existing
+        if not catalog:
+            return dict(message="A catalog with id '{}' is not exist."
+                        .format(id)), 400
 
+        # check if catalog's name is existing
         name = Catalog.parser.parse_args()['name']
         if CatalogModel.find_by_name(name):
-            return {
-                       'message': "A catalog with name '{}' already exists.".format(
-                           name)}, 400
+            return dict(message="A catalog with name '{}' already exists."
+                        .format(name)), 400
 
-        store.name = name
-
+        # update catalog
+        catalog.name = name
         try:
-            store.save_to_db()
+            catalog.save_to_db()
         except:
-            return {"message": "An error occurred creating the catlog."}, 500
+            return {"message": "An error occurred creating the catalog."}, 500
 
-        return store.json(), 200
+        return catalog.json(), 200
 
     def delete(self, id):
         catalog = CatalogModel.find_by_id(id)
         if catalog:
             catalog.delete_from_db()
 
-        return '', 204
+        return {'message': 'Catalog deleted'}, 204
 
 
 class CatalogList(Resource):
@@ -79,5 +79,3 @@ class CatalogList(Resource):
             catalogs = CatalogModel.query.all()
         return {
             'catalogs': [catalog.json() for catalog in catalogs]}
-
-

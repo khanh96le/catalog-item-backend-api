@@ -47,16 +47,14 @@ class Item(Resource):
         return {'message': 'Item deleted'}, 204
 
     def put(self, id):
-        data = Item.parser.parse_args()
-
         item = ItemModel.find_by_id(id)
-
         if item is None:
             return {'message': 'Item not found'}, 404
-        else:
-            item.link = data['link']
-            item.description = data['description']
-            item.catalog_id = data['catalog_id']
+
+        data = Item.parser.parse_args()
+        item.link = data['link']
+        item.description = data['description']
+        item.catalog_id = data['catalog_id']
 
         try:
             item.save_to_db()
