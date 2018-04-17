@@ -3,6 +3,8 @@ import json
 import httplib2
 from flask_restful import Resource, reqparse
 from app.models.user import UserModel
+from flask_jwt import _default_jwt_encode_handler
+from flask import jsonify
 
 
 class UserRegister(Resource):
@@ -35,13 +37,11 @@ class UserLogin(Resource):
 
     parser.add_argument('tokenId', type=str)
     parser.add_argument('profileObj', type=str)
-    parser.add_argument('accessToken', type=str)
 
     def post(self):
         try:
             token_id = UserLogin.parser.parse_args()['tokenId']
             profile_str = UserLogin.parser.parse_args()['profileObj']
-            access_token = UserLogin.parser.parse_args()['accessToken']
         except:
             return {"message": "Not found authentication info"}
 
@@ -79,4 +79,7 @@ class UserLogin(Resource):
         else:
             user = query_result.first()
 
-        return user.json(), 200
+        # generate JWT token
+        token = _default_jwt_encode_handler(user)
+
+        return {"user": user.json(), "access_token": token.decode('utf-8')}, 200
