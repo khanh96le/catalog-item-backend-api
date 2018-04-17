@@ -1,8 +1,7 @@
 from flask_restful import Resource, reqparse
-from models.catalog import CatalogModel
-from flask import session
-from webargs import fields, validate
-from webargs.flaskparser import use_kwargs, parser
+from app.models.catalog import CatalogModel
+from webargs import fields
+from webargs.flaskparser import use_kwargs
 
 
 class Catalog(Resource):
