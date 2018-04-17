@@ -23,7 +23,7 @@ class UserModel(db.Model):
     def json(self):
         return {
             'id': self.id,
-            'name': self.given_name + self.family_name,
+            'name': self.given_name + ' ' + self.family_name,
             'image_url': self.image_url
         }
 

@@ -1,3 +1,4 @@
+from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 from app.models.catalog import CatalogModel
 from webargs import fields
@@ -18,6 +19,7 @@ class Catalog(Resource):
             return catalog.json()
         return {'message': 'Catalog not found'}, 404
 
+    @jwt_required()
     def post(self):
         data = Catalog.parser.parse_args()
         name = data['name']
@@ -33,6 +35,7 @@ class Catalog(Resource):
 
         return catalog.json(), 201
 
+    @jwt_required()
     def put(self, id):
         catalog = CatalogModel.find_by_id(id)
 
@@ -56,6 +59,7 @@ class Catalog(Resource):
 
         return catalog.json(), 200
 
+    @jwt_required()
     def delete(self, id):
         catalog = CatalogModel.find_by_id(id)
         if catalog:
