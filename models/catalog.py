@@ -30,6 +30,10 @@ class CatalogModel(db.Model):
         return cls.query.filter_by(name=name).first()
 
     @classmethod
+    def find_by_names(cls, name):
+        return cls.query.filter(cls.name.like('%{}%'.format(name))).all()
+
+    @classmethod
     def find_by_id(cls, id):
         return cls.query.filter_by(id=id).first()
 

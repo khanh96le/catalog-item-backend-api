@@ -2,6 +2,7 @@ import ast
 import json
 import httplib2
 from flask_restful import Resource, reqparse
+from flask import session as login_session
 from models.user import UserModel
 
 class UserRegister(Resource):
@@ -35,15 +36,17 @@ class UserLogin(Resource):
 
     parser.add_argument('tokenId', type=str)
     parser.add_argument('profileObj', type=str)
+    parser.add_argument('accessToken', type=str)
 
     def post(self):
         try:
             token_id = UserLogin.parser.parse_args()['tokenId']
-            profileStr = UserLogin.parser.parse_args()['profileObj']
+            profile_str = UserLogin.parser.parse_args()['profileObj']
+            access_token = UserLogin.parser.parse_args()['accessToken']
         except:
             return {"message": "Not found authentication info"}
 
-        profile = ast.literal_eval(profileStr)
+        profile = ast.literal_eval(profile_str)
         url = ('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=%s'
                % token_id)
         h = httplib2.Http()
@@ -61,6 +64,20 @@ class UserLogin(Resource):
         if profile['googleId'] != result['sub']:
             return {"message": "Invalid gplus id"}, 404
 
-        # TODO: Check user in database
+        # check user in database,
+        # if not exist, create new user then create session
+        # else create session
+        query_result = UserModel.query.filter_by(email=result['email'])
+        if not query_result.count():
+            user = UserModel(
+                family_name=result['family_name'],
+                given_name=result['given_name'],
+                email=result['email'],
+                google_id=result['sub'],
+                image_url=result['picture']
+            )
+            user.save_to_db()
+        else:
+            user = query_result.first()
 
-        return {"message": "Login success"}, 200
+        return user.json(), 200

@@ -1,5 +1,8 @@
 from flask_restful import Resource, reqparse
 from models.catalog import CatalogModel
+from flask import session
+from webargs import fields, validate
+from webargs.flaskparser import use_kwargs, parser
 
 
 class Catalog(Resource):
@@ -63,6 +66,19 @@ class Catalog(Resource):
 
 
 class CatalogList(Resource):
-    def get(self):
+    args = {
+        'name': fields.Str(
+            required=False
+        ),
+    }
+
+    @use_kwargs(args)
+    def get(self, name):
+        if name:
+            catalogs = CatalogModel.find_by_names(name)
+        else:
+            catalogs = CatalogModel.query.all()
         return {
-            'catalogs': [store.json() for store in CatalogModel.query.all()]}
+            'catalogs': [catalog.json() for catalog in catalogs]}
+
+

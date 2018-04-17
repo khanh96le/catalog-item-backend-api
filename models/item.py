@@ -11,6 +11,8 @@ class ItemModel(db.Model):
     created = db.Column(db.DateTime, server_default=db.func.now())
     catalog_id = db.Column(db.Integer, db.ForeignKey('catalogs.id'))
     catalog = db.relationship('CatalogModel')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user = db.relationship('UserModel')
 
     def __init__(self, link, description, catalog_id):
         self.link = link
