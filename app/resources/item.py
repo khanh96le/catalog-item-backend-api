@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from app.models.item import ItemModel
+from flask_jwt import jwt_required
 
 
 class Item(Resource):
@@ -20,7 +21,7 @@ class Item(Resource):
                         help="Every item needs a catalog id."
                         )
 
-    # @jwt_required(k)
+    @jwt_required()
     def get(self, id):
         item = ItemModel.find_by_id(id)
         if item:

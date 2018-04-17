@@ -12,7 +12,7 @@ class UserModel(db.Model):
     given_name = db.Column(db.String(50))
     items = db.relationship('ItemModel', lazy='dynamic')
 
-    def __init__(self, family_name, given_name, email, google_id, image_url):
+    def __init__(self, email, google_id, family_name, given_name, image_url):
         self.family_name = family_name
         self.given_name = given_name
         self.email = email
@@ -22,7 +22,8 @@ class UserModel(db.Model):
 
     def json(self):
         return {
-            'name': self.name,
+            'id': self.id,
+            'name': self.given_name + self.family_name,
             'image_url': self.image_url
         }
 
