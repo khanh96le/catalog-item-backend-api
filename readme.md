@@ -1,5 +1,10 @@
-# Stores REST Api
+# Server-side Catalog Item Rest API - FSND
 
 This is built with Flask, Flask-RESTful, Flask-JWT, and Flask-SQLAlchemy.
 
-Deployed on Heroku.
+## Installation
+- Clone or download this project
+- Running
+```python
+python app.py
+```
