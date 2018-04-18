@@ -21,13 +21,13 @@ class Item(Resource):
                         help="Every item needs a catalog id."
                         )
 
-    @jwt_required()
     def get(self, id):
         item = ItemModel.find_by_id(id)
         if item:
             return item.json()
         return {'message': 'Item not found'}, 404
 
+    @jwt_required()
     def post(self):
         data = Item.parser.parse_args()
 
@@ -40,6 +40,7 @@ class Item(Resource):
 
         return item.json(), 201
 
+    @jwt_required()
     def delete(self, id):
         item = ItemModel.find_by_id(id)
         if item:
@@ -47,6 +48,7 @@ class Item(Resource):
 
         return {'message': 'Item deleted'}, 204
 
+    @jwt_required()
     def put(self, id):
         item = ItemModel.find_by_id(id)
         if item is None:

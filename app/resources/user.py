@@ -3,33 +3,7 @@ import json
 import httplib2
 from flask_restful import Resource, reqparse
 from app.models.user import UserModel
-from flask_jwt import _default_jwt_encode_handler
-from flask import jsonify
-
-
-class UserRegister(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('username',
-                        type=str,
-                        required=True,
-                        help="This field cannot be blank."
-                        )
-    parser.add_argument('password',
-                        type=str,
-                        required=True,
-                        help="This field cannot be blank."
-                        )
-
-    def post(self):
-        data = UserRegister.parser.parse_args()
-
-        if UserModel.find_by_username(data['username']):
-            return {"message": "A user with that username already exists"}, 400
-
-        user = UserModel(**data)
-        user.save_to_db()
-
-        return {"message": "User created successfully."}, 201
+from flask_jwt import _default_jwt_encode_handler, jwt_required
 
 
 class UserLogin(Resource):
@@ -37,6 +11,10 @@ class UserLogin(Resource):
 
     parser.add_argument('tokenId', type=str)
     parser.add_argument('profileObj', type=str)
+
+    @jwt_required()
+    def get(self):
+        return {"message": "valid token"}, 200
 
     def post(self):
         try:
@@ -64,8 +42,8 @@ class UserLogin(Resource):
             return {"message": "Invalid gplus id"}, 404
 
         # check user in database,
-        # if not exist, create new user then create session
-        # else create session
+        # if not exist, create new user then generate access token
+        # else generate access token
         query_result = UserModel.query.filter_by(email=result['email'])
         if not query_result.count():
             user = UserModel(

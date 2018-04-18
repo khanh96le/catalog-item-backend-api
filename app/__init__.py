@@ -5,7 +5,7 @@ from flask_restful import Api
 
 from app.resources.catalog import Catalog, CatalogList
 from app.resources.item import Item, ItemList
-from app.resources.user import UserRegister, UserLogin
+from app.resources.user import UserLogin
 from app.security import authenticate, identity
 
 
@@ -22,7 +22,6 @@ def create_app(object_name):
     api.add_resource(Item, '/api/item', '/api/item/<int:id>')
     api.add_resource(ItemList, '/api/items')
 
-    api.add_resource(UserRegister, '/api/register')
     api.add_resource(UserLogin, '/api/login')
 
     return app
