@@ -3,7 +3,7 @@ import json
 import httplib2
 from flask_restful import Resource, reqparse
 from app.models.user import UserModel
-from flask_jwt import _default_jwt_encode_handler
+from flask_jwt import _default_jwt_encode_handler, jwt_required
 
 
 class UserLogin(Resource):
@@ -11,6 +11,10 @@ class UserLogin(Resource):
 
     parser.add_argument('tokenId', type=str)
     parser.add_argument('profileObj', type=str)
+
+    @jwt_required()
+    def get(self):
+        return {"message": "valid token"}, 200
 
     def post(self):
         try:
@@ -38,8 +42,8 @@ class UserLogin(Resource):
             return {"message": "Invalid gplus id"}, 404
 
         # check user in database,
-        # if not exist, create new user then create session
-        # else create session
+        # if not exist, create new user then generate access token
+        # else generate access token
         query_result = UserModel.query.filter_by(email=result['email'])
         if not query_result.count():
             user = UserModel(
