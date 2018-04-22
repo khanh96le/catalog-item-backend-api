@@ -13,8 +13,9 @@ class Catalog(Resource):
                         help="This field cannot be left blank!"
                         )
 
-    def get(self, id):
-        catalog = CatalogModel.find_by_id(id)
+    @staticmethod
+    def get(_id):
+        catalog = CatalogModel.find_by_id(_id)
         if catalog:
             return catalog.json()
         return {'message': 'Catalog not found'}, 404
@@ -36,8 +37,8 @@ class Catalog(Resource):
         return catalog.json(), 201
 
     @jwt_required()
-    def put(self, id):
-        catalog = CatalogModel.find_by_id(id)
+    def put(self, _id):
+        catalog = CatalogModel.find_by_id(_id)
 
         # check if catalog is existing
         if not catalog:
@@ -60,8 +61,8 @@ class Catalog(Resource):
         return catalog.json(), 200
 
     @jwt_required()
-    def delete(self, id):
-        catalog = CatalogModel.find_by_id(id)
+    def delete(self, _id):
+        catalog = CatalogModel.find_by_id(_id)
         if catalog:
             catalog.delete_from_db()
 

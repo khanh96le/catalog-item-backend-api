@@ -15,7 +15,7 @@ def create_app(object_name):
     api = Api(app)
     app.config.from_object(object_name)
 
-    jwt = JWT(app, authenticate, identity)
+    JWT(app, authenticate, identity)
 
     api.add_resource(Catalog, '/api/catalog', '/api/catalog/<int:id>')
     api.add_resource(CatalogList, '/api/catalogs')

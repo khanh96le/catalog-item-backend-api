@@ -21,7 +21,8 @@ class Item(Resource):
                         help="Every item needs a catalog id."
                         )
 
-    def get(self, id):
+    @staticmethod
+    def get(_id):
         item = ItemModel.find_by_id(id)
         if item:
             return item.json()
@@ -41,16 +42,16 @@ class Item(Resource):
         return item.json(), 201
 
     @jwt_required()
-    def delete(self, id):
-        item = ItemModel.find_by_id(id)
+    def delete(self, _id):
+        item = ItemModel.find_by_id(_id)
         if item:
             item.delete_from_db()
 
         return {'message': 'Item deleted'}, 204
 
     @jwt_required()
-    def put(self, id):
-        item = ItemModel.find_by_id(id)
+    def put(self, _id):
+        item = ItemModel.find_by_id(_id)
         if item is None:
             return {'message': 'Item not found'}, 404
 
@@ -68,7 +69,7 @@ class Item(Resource):
 
 
 class ItemList(Resource):
-    def get(self):
+    @staticmethod
+    def get():
         items = ItemModel.query.order_by(ItemModel.created.desc()).all()
         return {'items': [item.json() for item in items]}
-
