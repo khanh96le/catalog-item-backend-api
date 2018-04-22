@@ -16,7 +16,8 @@ class UserLogin(Resource):
     def get(self):
         return {"message": "valid token"}, 200
 
-    def post(self):
+    @staticmethod
+    def post():
         try:
             token_id = UserLogin.parser.parse_args()['tokenId']
             profile_str = UserLogin.parser.parse_args()['profileObj']
