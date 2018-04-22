@@ -3,15 +3,15 @@ from app.utils import extract_video_thumbnail
 
 
 class ItemModel(db.Model):
-    __tablename__ = 'items'
+    __tablename__ = 'item'
 
     id = db.Column(db.Integer, primary_key=True)
     link = db.Column(db.String(1000), nullable=False)
     description = db.Column(db.String(1000))
     created = db.Column(db.DateTime, server_default=db.func.now())
-    catalog_id = db.Column(db.Integer, db.ForeignKey('catalogs.id'))
+    catalog_id = db.Column(db.Integer, db.ForeignKey('catalog.id'))
     catalog = db.relationship('CatalogModel')
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('UserModel')
 
     def __init__(self, link, description, catalog_id):
@@ -41,8 +41,8 @@ class ItemModel(db.Model):
         return cls.query.filter_by(link=link).first()
 
     @classmethod
-    def find_by_id(cls, id):
-        return cls.query.filter_by(id=id).first()
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
 
     def save_to_db(self):
         db.session.add(self)

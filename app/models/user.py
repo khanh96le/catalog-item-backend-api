@@ -2,7 +2,7 @@ from db import db
 
 
 class UserModel(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     google_id = db.Column(db.String(20), unique=True)
