@@ -7,15 +7,19 @@ from app.resources.catalog import Catalog, CatalogList
 from app.resources.item import Item, ItemList
 from app.resources.user import UserLogin
 from app.security import authenticate, identity
+from config import config
+from db import db
 
 
-def create_app(object_name):
+def create_app(config_name):
     app = Flask(__name__)
     CORS(app)
     api = Api(app)
-    app.config.from_object(object_name)
+    app.config.from_object(config[config_name])
 
     JWT(app, authenticate, identity)
+
+    db.init_app(app)
 
     api.add_resource(Catalog, '/catalogs/<int:catalog_id>')
     api.add_resource(CatalogList, '/catalogs')
