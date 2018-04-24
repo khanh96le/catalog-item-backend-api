@@ -26,7 +26,13 @@ class CatalogModel(db.Model):
 
     @staticmethod
     def validate(data):
-        """Validate data and return an instance of Catalog"""
+        """
+        Validate data
+        If data is valid, return an instance of Catalog
+        If data is invalid, raise ValueError
+
+        :param data: a dictionary
+        """
         if 'name' not in data:
             raise ValueError('Catalog Name is required')
 
