@@ -22,36 +22,23 @@ class Item(Resource):
                         )
 
     @staticmethod
-    def get(_id):
-        item = ItemModel.find_by_id(id)
+    def get(item_id):
+        item = ItemModel.find_by_id(item_id)
         if item:
             return item.json()
         return {'message': 'Item not found'}, 404
 
     @jwt_required()
-    def post(self):
-        data = Item.parser.parse_args()
-
-        item = ItemModel(**data)
-
-        try:
-            item.save_to_db()
-        except:
-            return {"message": "An error occurred inserting the item."}, 500
-
-        return item.json(), 201
-
-    @jwt_required()
-    def delete(self, _id):
-        item = ItemModel.find_by_id(_id)
+    def delete(self, item_id):
+        item = ItemModel.find_by_id(item_id)
         if item:
             item.delete_from_db()
 
         return {'message': 'Item deleted'}, 204
 
     @jwt_required()
-    def put(self, _id):
-        item = ItemModel.find_by_id(_id)
+    def put(self, item_id):
+        item = ItemModel.find_by_id(item_id)
         if item is None:
             return {'message': 'Item not found'}, 404
 
@@ -73,3 +60,17 @@ class ItemList(Resource):
     def get():
         items = ItemModel.query.order_by(ItemModel.created.desc()).all()
         return {'items': [item.json() for item in items]}
+
+    @jwt_required()
+    def post(self):
+        data = Item.parser.parse_args()
+
+        item = ItemModel(**data)
+
+        try:
+            item.save_to_db()
+        except:
+            return {"message": "An error occurred inserting the item."}, 500
+
+        return item.json(), 201
+
