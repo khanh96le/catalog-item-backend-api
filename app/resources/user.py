@@ -2,8 +2,8 @@ import ast
 import json
 import httplib2
 from flask_restful import Resource, reqparse
-from app.models.user import UserModel
 from flask_jwt import _default_jwt_encode_handler, jwt_required
+from app.models.user import UserModel
 
 
 class UserLogin(Resource):
@@ -45,8 +45,8 @@ class UserLogin(Resource):
         # check user in database,
         # if not exist, create new user then generate access token
         # else generate access token
-        query_result = UserModel.query.filter_by(email=result['email'])
-        if not query_result.count():
+        user = UserModel.query.filter_by(email=result['email']).first()
+        if not user:
             user = UserModel(
                 family_name=result['family_name'],
                 given_name=result['given_name'],
@@ -55,8 +55,6 @@ class UserLogin(Resource):
                 image_url=result['picture']
             )
             user.save_to_db()
-        else:
-            user = query_result.first()
 
         # generate JWT token
         token = _default_jwt_encode_handler(user)
