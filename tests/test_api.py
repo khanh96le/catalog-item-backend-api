@@ -2,16 +2,21 @@ import json
 import unittest
 from flask import current_app
 from app import create_app, db
-from app.models.catalog import CatalogModel
 
 
 class APITestCase(unittest.TestCase):
     def setUp(self):
         self.app = create_app('testing')
-        db.app = self.app
+        self.app_context = self.app.app_context()
+        self.app_context.push()
         db.create_all()
         self.access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1MjQ1NzU0MjIsImV4cCI6MTU1NjExMTQyMiwiaWF0IjoxNTI0NTc1NDIyLCJpZGVudGl0eSI6MX0.ScyQPjZ84zQr1Q4WJWzU2mouEf_k2hE_OhL4vIQl2fI"
         self.client = self.app.test_client()
+
+    def tearDown(self):
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
 
     @staticmethod
     def get_api_headers(access_token):
@@ -20,10 +25,6 @@ class APITestCase(unittest.TestCase):
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
-
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
     def test_app_exists(self):
         self.assertFalse(current_app is None)
