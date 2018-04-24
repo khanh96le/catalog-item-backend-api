@@ -3,12 +3,15 @@ from flask_cors import CORS
 from flask_jwt import JWT
 from flask_restful import Api
 
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
+
 from app.resources.catalog import Catalog, CatalogList
 from app.resources.item import Item, ItemList
 from app.resources.user import UserLogin
 from app.security import authenticate, identity
 from config import config
-from db import db
+
 
 
 def create_app(config_name):

@@ -1,4 +1,4 @@
-from db import db
+from app import db
 from app.utils import extract_video_thumbnail
 
 
