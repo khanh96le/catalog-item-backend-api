@@ -22,7 +22,6 @@ def create_app(config_name):
 
     JWT(app, authenticate, identity)
 
-    # db.app = app
     db.init_app(app)
 
     api.add_resource(Catalog, '/catalogs/<int:catalog_id>')

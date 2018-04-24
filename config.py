@@ -3,6 +3,7 @@ from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
 class Config:
     # secrete key for encoding and decoding access token
     # TODO: Move hard code config into ENV config
@@ -16,7 +17,7 @@ class Config:
 
 class DevConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'\
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}' \
         .format(os.path.join(basedir, 'data-dev.db'))
 
 
@@ -30,7 +31,7 @@ class ProdConfig(Config):
     # allow flask restful return JSON exception
     PROPAGATE_EXCEPTIONS = True
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'\
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///{}' \
         .format(os.path.join(basedir, 'data.db'))
 
 
