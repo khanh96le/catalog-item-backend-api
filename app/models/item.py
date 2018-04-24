@@ -36,6 +36,40 @@ class ItemModel(db.Model):
             ),
         }
 
+    @staticmethod
+    def validate(data):
+        """
+        Validate data.
+        If data is valid, return an instance of Item
+        If data is invalid, raise ValueError
+
+        :param data: a dictionary
+        """
+        if 'link' not in data or 'catalog_id' not in data:
+            raise ValueError('Link and Catalog ID cannot be blank')
+
+        link = data['link']
+        catalog_id = data['catalog_id']
+
+        if not link or not catalog_id:
+            raise ValueError('Link and Catalog ID cannot be blank')
+
+        if type(catalog_id).__name__ != 'int':
+            raise ValueError('Catalog ID must be a number')
+
+        description = ''
+        if 'description' in data:
+            description = data['description']
+            if len(description) > 1000:
+                raise ValueError('Description must be a less than 1000 '
+                                 'characters')
+
+        return ItemModel(
+            link=link,
+            catalog_id=catalog_id,
+            description=description
+        )
+
     @classmethod
     def find_by_link(cls, link):
         return cls.query.filter_by(link=link).first()

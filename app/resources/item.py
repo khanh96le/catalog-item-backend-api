@@ -1,26 +1,11 @@
-from flask_restful import Resource, reqparse
-from app.models.item import ItemModel
+from flask import request
+from flask_restful import Resource
 from flask_jwt import jwt_required
+from app.models.item import ItemModel
+from app.models.catalog import CatalogModel
 
 
 class Item(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('link',
-                        type=str,
-                        required=True,
-                        help="This field cannot be left blank!"
-                        )
-    parser.add_argument('description',
-                        type=str,
-                        required=False,
-                        help="Description."
-                        )
-    parser.add_argument('catalog_id',
-                        type=str,
-                        required=True,
-                        help="Every item needs a catalog id."
-                        )
-
     @staticmethod
     def get(item_id):
         item = ItemModel.find_by_id(item_id)
@@ -31,27 +16,35 @@ class Item(Resource):
     @jwt_required()
     def delete(self, item_id):
         item = ItemModel.find_by_id(item_id)
-        if item:
-            item.delete_from_db()
+        if not item:
+            return {'message': 'Item {} is not '
+                               'found.'.format(item_id)}, 404
 
-        return {'message': 'Item deleted'}, 204
+        item.delete_from_db()
+        return {'message': 'Deleted successful'}, 200
 
     @jwt_required()
     def put(self, item_id):
-        item = ItemModel.find_by_id(item_id)
-        if item is None:
-            return {'message': 'Item not found'}, 404
-
-        data = Item.parser.parse_args()
-        item.link = data['link']
-        item.description = data['description']
-        item.catalog_id = data['catalog_id']
-
         try:
-            item.save_to_db()
-        except:
-            return {"message": "An error occurred inserting the item."}, 500
+            update_item = ItemModel.validate(request.json)
+        except ValueError as e:
+            return dict(message=str(e)), 400
 
+        item = ItemModel.find_by_id(item_id)
+        if not item:
+            return dict(message="Item '{}' is not found."
+                        .format(item_id)), 404
+
+        catalog = CatalogModel.find_by_id(update_item.catalog_id)
+        if not catalog:
+            return dict(message='Catalog {} is not found.'
+                                ''.format(update_item.catalog_id)), 404
+
+        item.link = update_item.link
+        item.catalog_id = update_item.catalog_id
+        item.description = update_item.description
+
+        item.save_to_db()
         return item.json()
 
 
@@ -63,14 +56,15 @@ class ItemList(Resource):
 
     @jwt_required()
     def post(self):
-        data = Item.parser.parse_args()
-
-        item = ItemModel(**data)
-
         try:
-            item.save_to_db()
-        except:
-            return {"message": "An error occurred inserting the item."}, 500
+            item = ItemModel.validate(request.json)
+        except ValueError as e:
+            return dict(message=str(e)), 400
 
+        catalog = CatalogModel.find_by_id(item.catalog_id)
+        if not catalog:
+            return dict(message='Catalog {} is not found.'
+                                ''.format(item.catalog_id)), 404
+
+        item.save_to_db()
         return item.json(), 201
-
