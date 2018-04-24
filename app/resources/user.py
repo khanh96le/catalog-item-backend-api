@@ -2,8 +2,8 @@ import ast
 import json
 import httplib2
 from flask_restful import Resource, reqparse
-from app.models.user import UserModel
 from flask_jwt import _default_jwt_encode_handler, jwt_required
+from app.models.user import UserModel
 
 
 class UserLogin(Resource):
