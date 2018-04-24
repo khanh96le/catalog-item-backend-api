@@ -1,8 +1,9 @@
+from webargs import fields
+from webargs.flaskparser import use_kwargs
+from flask import request
 from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 from app.models.catalog import CatalogModel
-from webargs import fields
-from webargs.flaskparser import use_kwargs
 
 
 class Catalog(Resource):
@@ -71,17 +72,16 @@ class CatalogList(Resource):
 
     @jwt_required()
     def post(self):
-        data = Catalog.parser.parse_args()
-        name = data['name']
+        try:
+            catalog = CatalogModel.validate(request.json)
+        except ValueError as e:
+            return dict(message=str(e)), 400
+
+        # check if name is existing, abort
+        name = catalog.name
         if CatalogModel.find_by_name(name):
             return dict(message="A catalog with name '{}' already exists."
                         .format(name)), 400
 
-        catalog = CatalogModel(name)
-        try:
-            catalog.save_to_db()
-        except:
-            return {"message": "An error occurred creating the catalog."}, 500
-
+        catalog.save_to_db()
         return catalog.json(), 201
-

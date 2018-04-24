@@ -24,6 +24,22 @@ class CatalogModel(db.Model):
             'items': [item.json() for item in self.items.all()]
         }
 
+    @staticmethod
+    def validate(data):
+        """Validate data and return an instance of Catalog"""
+        if 'name' not in data:
+            raise ValueError('Catalog Name is required')
+
+        name = data['name']
+        if not name:
+            raise ValueError('Catalog Name cannot be blank')
+
+        if len(name) > 40:
+            raise ValueError('Catalog Name cannot be greater than 40 '
+                             'characters')
+
+        return CatalogModel(name=name)
+
     @classmethod
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
