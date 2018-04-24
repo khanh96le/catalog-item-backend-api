@@ -3,6 +3,7 @@ Flask-Cors==3.0.3
 Flask-JWT==0.3.2
 Flask-RESTful==0.3.6
 Flask-SQLAlchemy==2.3.2
+flask-migrate==2.1.1
 httplib2==0.11.3
 webargs==2.1.0
 Werkzeug==0.14.1
