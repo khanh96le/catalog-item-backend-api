@@ -14,31 +14,15 @@ class Catalog(Resource):
                         )
 
     @staticmethod
-    def get(_id):
-        catalog = CatalogModel.find_by_id(_id)
+    def get(catalog_id):
+        catalog = CatalogModel.find_by_id(catalog_id)
         if catalog:
             return catalog.json()
         return {'message': 'Catalog not found'}, 404
 
     @jwt_required()
-    def post(self):
-        data = Catalog.parser.parse_args()
-        name = data['name']
-        if CatalogModel.find_by_name(name):
-            return dict(message="A catalog with name '{}' already exists."
-                        .format(name)), 400
-
-        catalog = CatalogModel(name)
-        try:
-            catalog.save_to_db()
-        except:
-            return {"message": "An error occurred creating the catalog."}, 500
-
-        return catalog.json(), 201
-
-    @jwt_required()
-    def put(self, _id):
-        catalog = CatalogModel.find_by_id(_id)
+    def put(self, catalog_id):
+        catalog = CatalogModel.find_by_id(catalog_id)
 
         # check if catalog is existing
         if not catalog:
@@ -61,8 +45,8 @@ class Catalog(Resource):
         return catalog.json(), 200
 
     @jwt_required()
-    def delete(self, _id):
-        catalog = CatalogModel.find_by_id(_id)
+    def delete(self, catalog_id):
+        catalog = CatalogModel.find_by_id(catalog_id)
         if catalog:
             catalog.delete_from_db()
 
@@ -84,3 +68,20 @@ class CatalogList(Resource):
             catalogs = CatalogModel.query.all()
         return {
             'catalogs': [catalog.json() for catalog in catalogs]}
+
+    @jwt_required()
+    def post(self):
+        data = Catalog.parser.parse_args()
+        name = data['name']
+        if CatalogModel.find_by_name(name):
+            return dict(message="A catalog with name '{}' already exists."
+                        .format(name)), 400
+
+        catalog = CatalogModel(name)
+        try:
+            catalog.save_to_db()
+        except:
+            return {"message": "An error occurred creating the catalog."}, 500
+
+        return catalog.json(), 201
+
