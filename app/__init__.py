@@ -22,6 +22,6 @@ def create_app(object_name):
     api.add_resource(Item, '/items/<int:item_id>')
     api.add_resource(ItemList, '/items')
 
-    api.add_resource(UserLogin, '/api/login')
+    api.add_resource(UserLogin, '/login')
 
     return app
