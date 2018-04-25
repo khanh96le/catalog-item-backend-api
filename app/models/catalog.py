@@ -17,10 +17,7 @@ class CatalogModel(db.Model):
             'id': self.id,
             'name': self.name,
             'itemsCount': self.items.count(),
-            'lastUpdated': "{}-{}-{}".format(
-                self.lastUpdated.year,
-                self.lastUpdated.month,
-                self.lastUpdated.day),
+            'lastUpdated': self.lastUpdated.strftime('%d/%m/%y %H:%M:%S'),
             'items': [item.json() for item in self.items.all()]
         }
 

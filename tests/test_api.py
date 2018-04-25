@@ -154,6 +154,11 @@ class CatalogTestCase(APITestCase):
 
         self.assertEqual(result.status_code, 200)
 
+    def test_get_catalog_last_update_field(self):
+        result = self.create_catalog(data={'name': 'Valid Name'})
+        data = json.loads(result.data.decode('utf-8'))
+        self.assertTrue(data['lastUpdated'] is not None)
+
 
 class ItemTestCase(APITestCase):
     def create_item(self,
