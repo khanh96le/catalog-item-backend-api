@@ -26,14 +26,7 @@ class ItemModel(db.Model):
             'img': extract_video_thumbnail(self.link),
             'description': self.description,
             'catalog': self.catalog.name,
-            'created': "{}-{}-{} {}:{}:{}".format(
-                self.created.year,
-                self.created.month,
-                self.created.day,
-                self.created.hour,
-                self.created.minute,
-                self.created.second,
-            ),
+            'created': self.created.strftime('%d/%m/%y %H:%M:%S'),
         }
 
     @staticmethod
@@ -46,16 +39,16 @@ class ItemModel(db.Model):
         :param data: a dictionary
         """
         if 'link' not in data or 'catalog_id' not in data:
-            raise ValueError('Link and Catalog ID cannot be blank')
+            raise ValueError('Link and catalog id cannot be blank')
 
         link = data['link']
         catalog_id = data['catalog_id']
 
         if not link or not catalog_id:
-            raise ValueError('Link and Catalog ID cannot be blank')
+            raise ValueError('Link and catalog id cannot be blank')
 
         if type(catalog_id).__name__ != 'int':
-            raise ValueError('Catalog ID must be a number')
+            raise ValueError('Catalog id must be a number')
 
         description = ''
         if 'description' in data:
