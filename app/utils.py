@@ -6,8 +6,8 @@ def extract_video_thumbnail(link):
     :param link: a string
     :return:
         If `link` is a youtube video's url, extract video id and return
-        youtube video thumbnail url. Unless return default image for non-exist
-        thumbnail.
+        youtube video thumbnail url. Unless return default image for
+        non-exist thumbnail.
     """
     regex = r"(youtu\.be\/|youtube\.com\/(watch\?(.*&)?v=|(embed|v)\/))([" \
             r"^\?&\"'>]+) "
