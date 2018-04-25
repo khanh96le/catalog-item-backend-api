@@ -47,6 +47,8 @@ class APITestCase(unittest.TestCase):
             'Accept': 'application/json'
         }
 
+
+class CatalogTestCase(APITestCase):
     def create_catalog(self,
                        headers=None,
                        data=None):
@@ -151,4 +153,157 @@ class APITestCase(unittest.TestCase):
             data=json.dumps({'name': 'Other Valid Name'})
         )
 
+        self.assertEqual(result.status_code, 200)
+
+
+class ItemTestCase(APITestCase):
+    def create_item(self,
+                    headers=None,
+                    data=None):
+        if headers is None:
+            headers = self.get_api_headers(self.access_token)
+        data_json = json.dumps(data)
+
+        return self.client.post(
+            '/items',
+            headers=headers,
+            data=data_json
+        )
+
+    def test_create_item_without_authorize(self):
+        result = self.client.post(
+            'items',
+            data=json.dumps({})
+        )
+
+        self.assertEqual(result.status_code, 401)
+
+    def test_create_item_with_invalid_data(self):
+        # empty link
+        result = self.create_item(data={
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        self.assertEqual(result.status_code, 400)
+
+        # empty catalog_id
+        result = self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+        })
+        self.assertEqual(result.status_code, 400)
+
+        # catalog id is not number
+        result = self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 'abc'
+        })
+        self.assertEqual(result.status_code, 400)
+
+    def test_create_item_with_not_existing_catalog_id(self):
+        result = self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        self.assertEqual(result.status_code, 404)
+
+    def test_create_item_success(self):
+        self.client.post(
+            '/catalogs',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({'name': 'Valid Name'})
+        )
+        result = self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        self.assertEqual(result.status_code, 201)
+
+    def test_delete_item_not_existing(self):
+        result = self.client.delete(
+            '/items/1',
+            headers=self.get_api_headers(self.access_token)
+        )
+
+        self.assertEqual(result.status_code, 404)
+
+    def test_delete_item_success(self):
+        self.client.post(
+            '/catalogs',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({'name': 'Valid Name'})
+        )
+        self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        result = self.client.delete(
+            '/items/1',
+            headers=self.get_api_headers(self.access_token)
+        )
+        self.assertEqual(result.status_code, 200)
+
+    def test_edit_item_not_existing(self):
+        result = self.client.put(
+            'items/1',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({
+                'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+                'description': 'Item description',
+                'catalog_id': 1
+            })
+        )
+        self.assertEqual(result.status_code, 404)
+
+    def test_edit_item_with_not_existing_catalog_id(self):
+        self.client.post(
+            '/catalogs',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({'name': 'Valid Name'})
+        )
+        self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        result = self.client.put(
+            'items/1',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({
+                'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+                'description': 'Item description',
+                'catalog_id': 2
+            })
+        )
+        self.assertEqual(result.status_code, 404)
+
+    def test_edit_item_success(self):
+        self.client.post(
+            '/catalogs',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({'name': 'Valid Name'})
+        )
+        self.client.post(
+            '/catalogs',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({'name': 'Other Valid Name'})
+        )
+        self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        result = self.client.put(
+            'items/1',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({
+                'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+                'description': 'Item description New',
+                'catalog_id': 2
+            })
+        )
         self.assertEqual(result.status_code, 200)
