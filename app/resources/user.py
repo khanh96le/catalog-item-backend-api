@@ -14,10 +14,15 @@ class UserLogin(Resource):
 
     @jwt_required()
     def get(self):
+        """Verify if access token is valid."""
         return {'message': 'Valid token'}, 200
 
     @staticmethod
     def post():
+        """Receive token ID from client, verify with Google account.
+        If account already exists, log user in.
+        If account doesn't exist, create new account and log user in.
+        """
         try:
             token_id = UserLogin.parser.parse_args()['tokenId']
             profile_str = UserLogin.parser.parse_args()['profileObj']

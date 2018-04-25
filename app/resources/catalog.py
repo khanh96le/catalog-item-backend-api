@@ -9,6 +9,9 @@ from app.models.catalog import CatalogModel
 class Catalog(Resource):
     @staticmethod
     def get(catalog_id):
+        """Find a catalog by its ID. Response json format if catalog
+        exists, unless response 404 not found.
+        """
         catalog = CatalogModel.find_by_id(catalog_id)
         if not catalog:
             return {'message': 'Catalog {} not found'.format(catalog_id)}, 404
@@ -16,6 +19,9 @@ class Catalog(Resource):
 
     @jwt_required()
     def put(self, catalog_id):
+        """Update a catalog by modifying its name. Validate before
+        updating.
+        """
         try:
             update_catalog = CatalogModel.validate(request.json)
         except ValueError as e:
@@ -37,6 +43,7 @@ class Catalog(Resource):
 
     @jwt_required()
     def delete(self, catalog_id):
+        """Delete a catalog by its ID."""
         catalog = CatalogModel.find_by_id(catalog_id)
         if not catalog:
             return {'message': 'Catalog {} not found.'.format(catalog_id)}, 404
@@ -54,6 +61,7 @@ class CatalogList(Resource):
 
     @use_kwargs(args)
     def get(self, name):
+        """Find catalogs have name contains a specific string."""
         if name:
             catalogs = CatalogModel.find_by_names(name)
         else:
@@ -63,6 +71,7 @@ class CatalogList(Resource):
 
     @jwt_required()
     def post(self):
+        """Create new catalog."""
         try:
             catalog = CatalogModel.validate(request.json)
         except ValueError as e:

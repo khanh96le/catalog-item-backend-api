@@ -8,6 +8,7 @@ from app.models.catalog import CatalogModel
 class Item(Resource):
     @staticmethod
     def get(item_id):
+        """Get an item by its ID."""
         item = ItemModel.find_by_id(item_id)
         if item:
             return item.json()
@@ -15,6 +16,7 @@ class Item(Resource):
 
     @jwt_required()
     def delete(self, item_id):
+        """Delete an item by its ID."""
         item = ItemModel.find_by_id(item_id)
         if not item:
             return {'message': 'Item {} not found.'.format(item_id)}, 404
@@ -24,6 +26,7 @@ class Item(Resource):
 
     @jwt_required()
     def put(self, item_id):
+        """Edit an item. Validate data before updating."""
         try:
             update_item = ItemModel.validate(request.json)
         except ValueError as e:
@@ -49,11 +52,13 @@ class Item(Resource):
 class ItemList(Resource):
     @staticmethod
     def get():
+        """Get all items in database, order by descending."""
         items = ItemModel.query.order_by(ItemModel.created.desc()).all()
         return {'items': [item.json() for item in items]}
 
     @jwt_required()
     def post(self):
+        """Create new item."""
         try:
             item = ItemModel.validate(request.json)
         except ValueError as e:
