@@ -311,3 +311,17 @@ class ItemTestCase(APITestCase):
             })
         )
         self.assertEqual(result.status_code, 200)
+
+    def test_get_item_with_created_field(self):
+        self.client.post(
+            '/catalogs',
+            headers=self.get_api_headers(self.access_token),
+            data=json.dumps({'name': 'Valid Name'})
+        )
+        result = self.create_item(data={
+            'link': 'https://www.youtube.com/watch?v=SzJ46YA_RaA',
+            'description': 'Item description',
+            'catalog_id': 1
+        })
+        data = json.loads(result.data.decode('utf-8'))
+        self.assertTrue(data['created'] is not None)

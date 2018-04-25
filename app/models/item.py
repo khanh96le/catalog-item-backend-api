@@ -26,14 +26,7 @@ class ItemModel(db.Model):
             'img': extract_video_thumbnail(self.link),
             'description': self.description,
             'catalog': self.catalog.name,
-            'created': "{}-{}-{} {}:{}:{}".format(
-                self.created.year,
-                self.created.month,
-                self.created.day,
-                self.created.hour,
-                self.created.minute,
-                self.created.second,
-            ),
+            'created': self.created.strftime('%d/%m/%y %H:%M:%S'),
         }
 
     @staticmethod
