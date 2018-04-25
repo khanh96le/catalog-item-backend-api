@@ -14,7 +14,7 @@ class UserLogin(Resource):
 
     @jwt_required()
     def get(self):
-        return {"message": "valid token"}, 200
+        return {'message': 'Valid token'}, 200
 
     @staticmethod
     def post():
@@ -22,7 +22,7 @@ class UserLogin(Resource):
             token_id = UserLogin.parser.parse_args()['tokenId']
             profile_str = UserLogin.parser.parse_args()['profileObj']
         except:
-            return {"message": "Not found authentication info"}, 404
+            return {'message': 'Not found authentication info'}, 404
 
         profile = ast.literal_eval(profile_str)
         url = ('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=%s'
@@ -32,15 +32,15 @@ class UserLogin(Resource):
 
         # verify result
         if not ('email' in result.keys() and 'sub' in result.keys()):
-            return {"message": "Token ID is invalid"}
+            return {'message': 'Token id is invalid'}
 
         # verify email
         if profile['email'] != result['email']:
-            return {"message": "Invalid email"}, 404
+            return {'message': 'Invalid email'}, 404
 
         # verify gplus id
         if profile['googleId'] != result['sub']:
-            return {"message": "Invalid gplus id"}, 404
+            return {'message': 'Invalid gplus id'}, 404
 
         # check user in database,
         # if not exist, create new user then generate access token
@@ -59,4 +59,5 @@ class UserLogin(Resource):
         # generate JWT token
         token = _default_jwt_encode_handler(user)
 
-        return {"user": user.json(), "access_token": token.decode('utf-8')}, 200
+        return {'user': user.json(),
+                'access_token': token.decode('utf-8')}, 200

@@ -34,14 +34,14 @@ class CatalogModel(db.Model):
         :param data: a dictionary
         """
         if 'name' not in data:
-            raise ValueError('Catalog Name is required')
+            raise ValueError('Catalog name is required')
 
         name = data['name']
         if not name:
-            raise ValueError('Catalog Name cannot be blank')
+            raise ValueError('Catalog name cannot be blank')
 
         if len(name) > 40:
-            raise ValueError('Catalog Name cannot be greater than 40 '
+            raise ValueError('Catalog name cannot be greater than 40 '
                              'characters')
 
         return CatalogModel(name=name)

@@ -11,14 +11,13 @@ class Item(Resource):
         item = ItemModel.find_by_id(item_id)
         if item:
             return item.json()
-        return {'message': 'Item not found'}, 404
+        return {'message': 'Item {} not found'.format(item_id)}, 404
 
     @jwt_required()
     def delete(self, item_id):
         item = ItemModel.find_by_id(item_id)
         if not item:
-            return {'message': 'Item {} is not '
-                               'found.'.format(item_id)}, 404
+            return {'message': 'Item {} not found.'.format(item_id)}, 404
 
         item.delete_from_db()
         return {'message': 'Deleted successful'}, 200
@@ -32,12 +31,11 @@ class Item(Resource):
 
         item = ItemModel.find_by_id(item_id)
         if not item:
-            return dict(message="Item '{}' is not found."
-                        .format(item_id)), 404
+            return dict(message='Item {} not found.'.format(item_id)), 404
 
         catalog = CatalogModel.find_by_id(update_item.catalog_id)
         if not catalog:
-            return dict(message='Catalog {} is not found.'
+            return dict(message='Catalog {} not found.'
                                 ''.format(update_item.catalog_id)), 404
 
         item.link = update_item.link
@@ -63,7 +61,7 @@ class ItemList(Resource):
 
         catalog = CatalogModel.find_by_id(item.catalog_id)
         if not catalog:
-            return dict(message='Catalog {} is not found.'
+            return dict(message='Catalog {} not found.'
                                 ''.format(item.catalog_id)), 404
 
         item.save_to_db()

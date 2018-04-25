@@ -77,7 +77,7 @@ class CatalogTestCase(APITestCase):
         message = json.loads(result.data.decode('utf-8'))
 
         self.assertEqual(result.status_code, 400)
-        self.assertEqual(message['message'], "Catalog Name cannot be blank")
+        self.assertEqual(message['message'], "Catalog name cannot be blank")
 
     def test_create_catalog_with_name_greater_than_40_characters(self):
         result = self.create_catalog(
@@ -87,7 +87,7 @@ class CatalogTestCase(APITestCase):
         message = json.loads(result.data.decode('utf-8'))
 
         self.assertEqual(result.status_code, 400)
-        self.assertEqual(message['message'], "Catalog Name cannot be greater "
+        self.assertEqual(message['message'], "Catalog name cannot be greater "
                                              "than 40 characters")
 
     def test_create_catalog_success(self):
@@ -109,7 +109,7 @@ class CatalogTestCase(APITestCase):
         message = json.loads(result.data.decode('utf-8'))
 
         self.assertEqual(result.status_code, 404)
-        self.assertEqual(message['message'], "Catalog 1 is not found.")
+        self.assertEqual(message['message'], "Catalog 1 not found.")
 
     def test_delete_catalog_success(self):
         self.create_catalog(data={'name': 'Valid Name'})
@@ -129,8 +129,7 @@ class CatalogTestCase(APITestCase):
         message = json.loads(result.data.decode('utf-8'))
 
         self.assertEqual(result.status_code, 404)
-        self.assertEqual(message['message'], "A catalog with id 1 is not "
-                                             "found.")
+        self.assertEqual(message['message'], 'Catalog 1 not found.')
 
     def test_edit_catalog_with_existing_name(self):
         self.create_catalog(data={'name': 'Valid Name'})
@@ -142,8 +141,8 @@ class CatalogTestCase(APITestCase):
         message = json.loads(result.data.decode('utf-8'))
 
         self.assertEqual(result.status_code, 400)
-        self.assertEqual(message['message'], "A catalog with name Valid Name "
-                                             "already exists.")
+        self.assertEqual(message['message'], 'Catalog name "Valid Name" '
+                                             'already exists.')
 
     def test_edit_catalog_success(self):
         self.create_catalog(data={'name': 'Valid Name'})

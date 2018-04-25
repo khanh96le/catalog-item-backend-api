@@ -46,16 +46,16 @@ class ItemModel(db.Model):
         :param data: a dictionary
         """
         if 'link' not in data or 'catalog_id' not in data:
-            raise ValueError('Link and Catalog ID cannot be blank')
+            raise ValueError('Link and catalog id cannot be blank')
 
         link = data['link']
         catalog_id = data['catalog_id']
 
         if not link or not catalog_id:
-            raise ValueError('Link and Catalog ID cannot be blank')
+            raise ValueError('Link and catalog id cannot be blank')
 
         if type(catalog_id).__name__ != 'int':
-            raise ValueError('Catalog ID must be a number')
+            raise ValueError('Catalog id must be a number')
 
         description = ''
         if 'description' in data:
