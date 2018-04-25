@@ -22,7 +22,7 @@ class UserLogin(Resource):
             token_id = UserLogin.parser.parse_args()['tokenId']
             profile_str = UserLogin.parser.parse_args()['profileObj']
         except:
-            return {"message": "Not found authentication info"}
+            return {"message": "Not found authentication info"}, 404
 
         profile = ast.literal_eval(profile_str)
         url = ('https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=%s'
