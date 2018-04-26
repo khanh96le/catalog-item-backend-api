@@ -32,12 +32,12 @@ class Catalog(Resource):
             return dict(message='Catalog {} not found.'
                         .format(catalog_id)), 404
 
-        name = update_catalog.name
-        if CatalogModel.find_by_name(name):
+        update_name = update_catalog.name
+        if CatalogModel.find_by_name(update_name):
             return dict(message='Catalog name "{}" already exists.'
-                        .format(name)), 400
+                        .format(update_name)), 400
 
-        catalog.name = name
+        catalog.name = update_name
         catalog.save_to_db()
         return catalog.json(), 200
 
