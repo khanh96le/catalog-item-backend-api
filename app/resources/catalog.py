@@ -49,7 +49,7 @@ class Catalog(Resource):
             return {'message': 'Catalog {} not found.'.format(catalog_id)}, 404
 
         catalog.delete_from_db()
-        return {'message': 'Deleted successful'}, 200
+        return {'message': 'Deleted successful.'}, 200
 
 
 class CatalogList(Resource):
