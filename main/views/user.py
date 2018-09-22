@@ -2,7 +2,6 @@ import ast
 import json
 import httplib2
 from flask_restful import Resource, reqparse
-from flask_jwt import _default_jwt_encode_handler, jwt_required
 from app.models.user import UserModel
 
 
@@ -12,7 +11,6 @@ class UserLogin(Resource):
     parser.add_argument('tokenId', type=str)
     parser.add_argument('profileObj', type=str)
 
-    @jwt_required()
     def get(self):
         """Verify if access token is valid."""
         return {'message': 'Valid token'}, 200
@@ -62,7 +60,8 @@ class UserLogin(Resource):
             user.save_to_db()
 
         # generate JWT token
-        token = _default_jwt_encode_handler(user)
+        # token = _default_jwt_encode_handler(user)
+        token = 'abc'
 
         return {'user': user.json(),
                 'access_token': token.decode('utf-8')}, 200

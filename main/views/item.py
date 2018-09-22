@@ -1,6 +1,5 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt import jwt_required
 from app.models.item import ItemModel
 from app.models.catalog import CatalogModel
 
@@ -14,7 +13,6 @@ class Item(Resource):
             return item.json()
         return {'message': 'Item {} not found'.format(item_id)}, 404
 
-    @jwt_required()
     def delete(self, item_id):
         """Delete an item by its ID."""
         item = ItemModel.find_by_id(item_id)
@@ -24,7 +22,6 @@ class Item(Resource):
         item.delete_from_db()
         return {'message': 'Deleted successful'}, 200
 
-    @jwt_required()
     def put(self, item_id):
         """Edit an item. Validate data before updating."""
         try:
@@ -56,7 +53,6 @@ class ItemList(Resource):
         items = ItemModel.query.order_by(ItemModel.created.desc()).all()
         return {'items': [item.json() for item in items]}
 
-    @jwt_required()
     def post(self):
         """Create new item."""
         try:

@@ -17,12 +17,17 @@ source activate flask-env
 ```
 
 #### Run migration
-Before running server, we need to create database. To do this, we use Flask-Migrate to upgrade dababase from migration's revision
+Before running server, we need to create database. To do this, we use Flask-Migrate to upgrade database from migration's revision
 ```
 cd catalog-item-backend-api
 python manage.py db upgrade
 ```
 After upgrading you'll see `data.db` in root folder
+
+#### Run server
+```
+python manage.py runserver --host 0.0.0.0 --port 5000
+```
 
 #### Run test
 To make sure everything is woking fine, we need to run tests.
@@ -30,8 +35,3 @@ To make sure everything is woking fine, we need to run tests.
 python manage.py test
 ```
 If every tests pass, move to next step
-
-#### Run server
-```
-python manage.py runserver --host 0.0.0.0 --port 5000
-```

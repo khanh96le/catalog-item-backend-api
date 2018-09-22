@@ -2,13 +2,11 @@ import json
 import unittest
 from flask import current_app
 from flask_jwt import _default_jwt_encode_handler
-from app import create_app, db
-from app.models.user import UserModel
 
 
 class APITestCase(unittest.TestCase):
     def setUp(self):
-        # create flask app instance in Testing mode
+        # create flask main instance in Testing mode
         self.app = create_app('testing')
         self.app_context = self.app.app_context()
         self.app_context.push()
