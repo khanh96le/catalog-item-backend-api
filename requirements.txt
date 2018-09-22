@@ -11,3 +11,4 @@ webargs==2.1.0
 Werkzeug==0.14.1
 flask-jwt==0.3.2
 jwt==0.5.2
+pytest==3.7.4
