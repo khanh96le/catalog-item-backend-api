@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy, Model
 
-cors = CORS()
-
 
 class CRUDMixin(Model):
-    """Mixin that adds convenience methods for CRUD (create, read, update, delete) operations."""
+    """Mixin that adds convenience methods for CRUD (create, read, update,
+    delete) operations.
+    """
 
     @classmethod
     def create(cls, **kwargs):
@@ -35,4 +34,6 @@ class CRUDMixin(Model):
         return commit and db.session.commit()
 
 
+cors = CORS()
 db = SQLAlchemy(model_class=CRUDMixin)
+Model = db.Model
