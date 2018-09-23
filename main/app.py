@@ -1,10 +1,8 @@
-import pkgutil
-
 from flask import Flask
 
 from main import commands
 from main.config import ProdConfig
-from main.exceptions import InvalidUsage
+from main.exceptions import InvalidUsage, InvalidSchema
 from main.extensions import cors, db
 from main.views import catalog
 
@@ -55,6 +53,7 @@ def register_error_handlers(app):
         return response
 
     app.errorhandler(InvalidUsage)(error_handler)
+    app.errorhandler(InvalidSchema)(error_handler)
 
 
 def register_commands(app):

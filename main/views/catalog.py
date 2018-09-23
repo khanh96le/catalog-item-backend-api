@@ -1,9 +1,7 @@
-from flask import request, Blueprint
+from flask import Blueprint
 from flask_apispec import use_kwargs, marshal_with
-from werkzeug.exceptions import BadRequest
 
 from main.exceptions import InvalidUsage
-from main.extensions import db
 from main.models.catalog import CatalogModel
 from main.serializers.catalog import CatalogSchema
 
@@ -59,5 +57,6 @@ def create_catalog(**kwargs):
 @marshal_with(CatalogSchema(many=True))
 def get_catalogs():
     catalogs = CatalogModel.query.all()
-    # TODO: paging
+    # TODO: paging, sorting, filtering, field selection
+    # https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/
     return catalogs

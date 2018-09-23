@@ -5,6 +5,7 @@ import pytest
 from main.app import create_app
 from main.config import TestConfig
 from main.extensions import db
+from tests.utils import TestClient
 
 
 @pytest.fixture(scope='function')
@@ -16,7 +17,7 @@ def test_app():
 
 @pytest.fixture(scope='function')
 def testclient(test_app):
-    """Create test client to call API without serving a HTTP web server.
+    """Create a test client to call APIs without serving a HTTP web server.
 
     Examples::
 
@@ -37,7 +38,7 @@ def testclient(test_app):
             )
     """
 
-    return test_app.test_client()
+    return TestClient(test_app.test_client())
 
 
 @pytest.fixture(scope='function', autouse=True)

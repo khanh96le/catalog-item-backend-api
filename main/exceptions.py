@@ -3,28 +3,43 @@
 from flask import jsonify
 
 
-def template(messages, code=500):
-    return {'messages': messages, 'status_code': code}
+def template(message, status_code=500, info=None):
+    """Error payload template. This is based on the idea of Twilio.
+
+    For more detail: https://blog.restcase.com/rest-api-error-codes-101/
+    """
+
+    return {
+        'status_code': status_code,
+        'message': message,
+        # 'code': custom_code, # custom code is not necessary for now
+        'more_info': info,
+    }
 
 
 #: Common errors
-UNKNOWN_ERROR = template([], code=500)
+UNKNOWN_ERROR = template('Unknown errors', status_code=500)
 
 #: Catalog errors
-CATALOG_NOT_FOUND = template(['Catalog not found'], code=404)
-CATALOG_ALREADY_EXISTED = template(['Catalog has already existed'], code=404)
+CATALOG_NOT_FOUND = template('Catalog not found', status_code=404)
+CATALOG_ALREADY_EXISTED = template('Catalog has already existed',
+                                   status_code=404)
 
 
-class InvalidUsage(Exception):
-    def __init__(self, messages, status_code=None, payload=None):
+class BaseError(Exception):
+    def __init__(self, **kwargs):
         Exception.__init__(self)
-        self.messages = messages
-        self.status_code = status_code
-        self.payload = payload
+        self.payload = kwargs
+        self.status_code = kwargs['status_code']
 
     def to_json(self):
-        rv = self.messages
+        rv = self.payload
         return jsonify(rv)
+
+
+class InvalidUsage(BaseError):
+    def __init__(self, **kwargs):
+        BaseError.__init__(self, **kwargs)
 
     @classmethod
     def unknown_error(cls):
@@ -37,3 +52,12 @@ class InvalidUsage(Exception):
     @classmethod
     def catalog_already_existed(cls):
         return cls(**CATALOG_NOT_FOUND)
+
+
+class InvalidSchema(BaseError):
+    def __init__(self, **kwargs):
+        BaseError.__init__(self, **kwargs)
+
+    @classmethod
+    def invalid_schema(cls, data):
+        return cls(**template('Invalid schema', status_code=400, info=data))
