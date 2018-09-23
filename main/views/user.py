@@ -1,9 +1,9 @@
 from flask import Blueprint
 from flask_apispec import use_kwargs, marshal_with
 
-from main.exceptions import InvalidUsage
+from main.exceptions import InvalidUsage, AuthenticationError
 from main.models.user import UserModel
-from main.serializers.user import UserSchema
+from main.serializers.user import UserSchema, SignInEmailSchema
 
 blueprint = Blueprint('user', __name__)
 
@@ -20,6 +20,20 @@ def register_user_by_email(**kwargs):
         raise InvalidUsage.user_already_existed()
 
     return UserModel(**kwargs).save(), 201
+
+
+@blueprint.route('/users/auth/email', methods=('POST',))
+@use_kwargs(SignInEmailSchema())
+@marshal_with(SignInEmailSchema())
+def sign_in_by_email(**kwargs):
+    """Log user in by email, password."""
+
+    user = UserModel.query.filter_by(email=kwargs['email']).one_or_none()
+    if user and user.check_password(kwargs['password']):
+        return user
+
+    raise AuthenticationError.login_by_email_fail()
+
 
 # @blueprint.route('/users/auth/google', methods=('POST',))
 # def register_user_with_google():

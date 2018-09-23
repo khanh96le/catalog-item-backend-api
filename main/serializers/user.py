@@ -13,3 +13,9 @@ class UserSchema(BaseSchema):
                              validate=validate.Length(min=8))
     google_id = fields.String()
     image_url = fields.String()
+
+
+class SignInEmailSchema(BaseSchema):
+    id = fields.Integer(dump_only=True)
+    email = fields.Email(required=True)
+    password = fields.String(required=True, load_only=True)

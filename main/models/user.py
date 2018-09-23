@@ -20,5 +20,5 @@ class UserModel(Model):
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password)
 
-    def check_password(self):
-        return bcrypt.check_password_hash(self.password)
+    def check_password(self, value):
+        return bcrypt.check_password_hash(self.password, value)

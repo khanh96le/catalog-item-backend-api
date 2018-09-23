@@ -2,7 +2,7 @@ from flask import Flask
 
 from main import commands
 from main.config import ProdConfig
-from main.exceptions import InvalidUsage, InvalidSchema
+from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError
 from main.extensions import cors, db, bcrypt
 from main.views import catalog, user
 
@@ -56,6 +56,7 @@ def register_error_handlers(app):
 
     app.errorhandler(InvalidUsage)(error_handler)
     app.errorhandler(InvalidSchema)(error_handler)
+    app.errorhandler(AuthenticationError)(error_handler)
 
 
 def register_commands(app):

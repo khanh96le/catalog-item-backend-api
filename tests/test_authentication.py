@@ -2,6 +2,8 @@
 import itertools
 import json
 
+from main.exceptions import LOGIN_BY_EMAIL_FAIL
+
 
 def _register_user(testclient):
     data = {
@@ -42,3 +44,33 @@ class TestAuthentication(object):
             )
             num_valid_combine += 1 if resp.status_code != 400 else 0
             assert num_valid_combine <= 1
+
+    def test_sign_in_by_email(self, testclient):
+        # Register new user
+        resp = _register_user(testclient)
+        data = json.loads(resp.data)
+
+        # Sign in registered user
+        resp = testclient.post('/users/auth/email', data={
+            'email': data.get('email'),
+            'password': '12345678@ABC'
+        })
+        assert resp.status_code == 200
+
+        # Sign in wrong password
+        resp = testclient.post('/users/auth/email', data={
+            'email': data.get('email'),
+            'password': 'wrong password'
+        })
+        assert resp.status_code == 404
+        assert (json.loads(resp.data)['message'] ==
+                LOGIN_BY_EMAIL_FAIL['message'])
+
+        # Sign in with not-existed email
+        resp = testclient.post('/users/auth/email', data={
+            'email': 'not.existed@email.com',
+            'password': 'wrong password'
+        })
+        assert resp.status_code == 404
+        assert (json.loads(resp.data)['message'] ==
+                LOGIN_BY_EMAIL_FAIL['message'])

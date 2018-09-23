@@ -26,7 +26,12 @@ CATALOG_ALREADY_EXISTED = template('Catalog has already existed',
                                    status_code=404)
 
 #: User errors
+USER_NOT_FOUND = template('User not found', status_code=404)
 USER_ALREADY_EXISTED = template('User has already existed', status_code=404)
+
+#: Authentication errors
+LOGIN_BY_EMAIL_FAIL = template('Email or password is not correct!',
+                               status_code=404)
 
 
 class BaseError(Exception):
@@ -57,6 +62,10 @@ class InvalidUsage(BaseError):
         return cls(**CATALOG_NOT_FOUND)
 
     @classmethod
+    def user_not_found(cls):
+        return cls(**USER_NOT_FOUND)
+
+    @classmethod
     def user_already_existed(cls):
         return cls(**USER_ALREADY_EXISTED)
 
@@ -68,3 +77,12 @@ class InvalidSchema(BaseError):
     @classmethod
     def invalid_schema(cls, data):
         return cls(**template('Invalid schema', status_code=400, info=data))
+
+
+class AuthenticationError(BaseError):
+    def __init__(self, **kwargs):
+        BaseError.__init__(self, **kwargs)
+
+    @classmethod
+    def login_by_email_fail(cls):
+        return cls(**LOGIN_BY_EMAIL_FAIL)
