@@ -25,6 +25,9 @@ CATALOG_NOT_FOUND = template('Catalog not found', status_code=404)
 CATALOG_ALREADY_EXISTED = template('Catalog has already existed',
                                    status_code=404)
 
+#: User errors
+USER_ALREADY_EXISTED = template('User has already existed', status_code=404)
+
 
 class BaseError(Exception):
     def __init__(self, **kwargs):
@@ -52,6 +55,10 @@ class InvalidUsage(BaseError):
     @classmethod
     def catalog_already_existed(cls):
         return cls(**CATALOG_NOT_FOUND)
+
+    @classmethod
+    def user_already_existed(cls):
+        return cls(**USER_ALREADY_EXISTED)
 
 
 class InvalidSchema(BaseError):

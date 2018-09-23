@@ -1,13 +1,25 @@
 from flask import Blueprint
+from flask_apispec import use_kwargs, marshal_with
+
+from main.exceptions import InvalidUsage
+from main.models.user import UserModel
+from main.serializers.user import UserSchema
 
 blueprint = Blueprint('user', __name__)
 
 
 @blueprint.route('/users', methods=('POST',))
-def register_user_by_email():
+@use_kwargs(UserSchema())
+@marshal_with(UserSchema())
+def register_user_by_email(**kwargs):
     """Register user by email password."""
 
-    pass
+    # Verify email
+    user = UserModel.query.filter_by(email=kwargs.get('email')).one_or_none()
+    if user:
+        raise InvalidUsage.user_already_existed()
+
+    return UserModel(**kwargs).save(), 201
 
 # @blueprint.route('/users/auth/google', methods=('POST',))
 # def register_user_with_google():

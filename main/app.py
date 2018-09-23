@@ -3,8 +3,8 @@ from flask import Flask
 from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema
-from main.extensions import cors, db
-from main.views import catalog
+from main.extensions import cors, db, bcrypt
+from main.views import catalog, user
 
 
 def create_app(config_object=ProdConfig):
@@ -31,6 +31,7 @@ def register_extensions(app):
     """Every extensions start with flask_* will be initialized here."""
 
     db.init_app(app)
+    bcrypt.init_app(app)
 
 
 def register_blueprints(app):
@@ -42,6 +43,7 @@ def register_blueprints(app):
 
     # Register all endpoints in `main.views`
     app.register_blueprint(catalog.blueprint)
+    app.register_blueprint(user.blueprint)
 
 
 def register_error_handlers(app):

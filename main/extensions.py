@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy, Model
 
@@ -37,3 +37,4 @@ class CRUDMixin(Model):
 cors = CORS()
 db = SQLAlchemy(model_class=CRUDMixin)
 Model = db.Model
+bcrypt = Bcrypt()
