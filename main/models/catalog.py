@@ -10,4 +10,3 @@ class CatalogModel(Model):
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)
-

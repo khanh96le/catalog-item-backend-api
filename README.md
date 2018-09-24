@@ -1,6 +1,4 @@
-# Server-side Catalog Item Rest API - FSND
-
-> This web API is built with major libraries like Flask, Flask-RESTful, Flask-JWT, and Flask-SQLAlchemy, Flask-Script.
+# Server-side Catalog Item Rest API
 
 ## Installation
 #### Clone or download this project
@@ -16,22 +14,19 @@ pip install -r requirements.txt
 source activate flask-env
 ```
 
-#### Run migration
-Before running server, we need to create database. To do this, we use Flask-Migrate to upgrade database from migration's revision
-```
-cd catalog-item-backend-api
-python manage.py db upgrade
-```
-After upgrading you'll see `data.db` in root folder
-
 #### Run server
 ```
-python manage.py runserver --host 0.0.0.0 --port 5000
+(flask-env) export FLASK_APP=autoapp.py
+(flask-env) export FLASK_DEBUG=1
+(flask-env)flask run --with-threads
 ```
 
 #### Run test
-To make sure everything is woking fine, we need to run tests.
 ```
-python manage.py test
+(flask-env) flask test
 ```
-If every tests pass, move to next step
+
+#### Show all available endpoints
+```
+(flask-env) flask urls
+```
