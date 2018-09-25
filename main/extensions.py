@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy, Model
 
 
@@ -38,3 +39,4 @@ cors = CORS()
 db = SQLAlchemy(model_class=CRUDMixin)
 Model = db.Model
 bcrypt = Bcrypt()
+migrate = Migrate()
