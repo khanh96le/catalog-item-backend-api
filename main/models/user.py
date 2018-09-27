@@ -1,6 +1,5 @@
-import bcrypt
-
 from main.extensions import db, Model
+from main.libs import bcrypt_custom
 
 
 class UserModel(Model):
@@ -21,9 +20,10 @@ class UserModel(Model):
             self.set_password(kwargs.get('password'))
 
     def set_password(self, password):
-        self.password_salt = bcrypt.gensalt()
-        self.password = bcrypt.hashpw(str(password), self.password_salt)
+        self.password, self.password_salt = \
+            bcrypt_custom.generate_password_hash(password)
 
     def check_password(self, value):
-        return bcrypt.hashpw(
-            str(value), str(self.password_salt)) == self.password
+        return bcrypt_custom.check_password_hash(
+            self.password, self.password_salt, value
+        )
