@@ -37,7 +37,7 @@ def generate_password_hash(password, rounds=12):
 
 
 def check_password_hash(pw_hash, pw_salt, value):
-    '''Tests a password hash against a candidate password. The candidate
+    """Tests a password hash against a candidate password. The candidate
     password is first hashed and then subsequently compared in constant
     time to the existing hash. This will either return `True` or `False`.
 
@@ -50,7 +50,7 @@ def check_password_hash(pw_hash, pw_salt, value):
     :param pw_salt: The salt
     :param pw_hash: The hash to be compared against.
     :param value: The password to compare.
-    '''
+    """
 
     # Python 3 unicode strings must be encoded as bytes before hashing.
     if PY3 and isinstance(pw_hash, str):
