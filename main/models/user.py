@@ -25,4 +25,5 @@ class UserModel(Model):
         self.password = bcrypt.hashpw(str(password), self.password_salt)
 
     def check_password(self, value):
-        return bcrypt.checkpw(value, self.password + self.password_salt)
+        return bcrypt.hashpw(
+            str(value), str(self.password_salt)) == self.password

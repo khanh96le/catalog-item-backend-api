@@ -24,7 +24,7 @@ def register_user_by_email(**kwargs):
 
 @blueprint.route('/users/auth/email', methods=('POST',))
 @use_kwargs(SignInEmailSchema())
-@marshal_with(SignInEmailSchema())
+@marshal_with(UserSchema())
 def sign_in_by_email(**kwargs):
     """Log user in by email, password."""
 
