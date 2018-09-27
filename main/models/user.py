@@ -1,6 +1,6 @@
 import bcrypt
 
-from main.extensions import db, Model, bcrypt
+from main.extensions import db, Model
 
 
 class UserModel(Model):
@@ -25,4 +25,4 @@ class UserModel(Model):
         self.password = bcrypt.hashpw(str(password), self.password_salt)
 
     def check_password(self, value):
-        return bcrypt.check_password_hash(self.password, value)
+        return bcrypt.checkpw(value, self.password + self.password_salt)

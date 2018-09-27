@@ -1,3 +1,4 @@
+bleach
 #: use for flask CLI
 click=3.7
 
