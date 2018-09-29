@@ -8,7 +8,7 @@ from .base import BaseSchema
 class UserSchema(BaseSchema):
     id = fields.Integer(dump_only=True)
     email = fields.Email(required=True)
-    fullname = fields.String(required=True, validate=validate.Length(min=1))
+    username = fields.String(required=True, validate=validate.Length(min=1))
     password = fields.String(load_only=True, required=True,
                              validate=validate.Length(min=8))
     google_id = fields.String()

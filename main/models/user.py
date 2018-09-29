@@ -1,4 +1,5 @@
-from main.extensions import db, Model
+from main.databases import Model
+from main.extensions import db
 from main.libs import bcrypt_custom
 
 
@@ -6,12 +7,13 @@ class UserModel(Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    fullname = db.Column(db.String(250))
-    email = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(250))
-    password_salt = db.Column(db.String(50))
-    google_id = db.Column(db.String(20), unique=True)
-    image_url = db.Column(db.String(1000))
+    username = db.Column(db.String(256))
+    email = db.Column(db.String(128), unique=True)
+    password = db.Column(db.String(256))
+    password_salt = db.Column(db.String(64))
+    google_id = db.Column(db.String(32), unique=True)
+    image_url = db.Column(db.String(500))
+    token = db.Column(db.String(256))
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)

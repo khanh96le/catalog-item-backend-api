@@ -7,7 +7,7 @@ from main.exceptions import LOGIN_BY_EMAIL_FAIL
 
 def _register_user(testclient):
     data = {
-        'fullname': 'jerry le',
+        'username': 'jerry le',
         'email': 'test@gmail.com',
         'password': '12345678@ABC',
     }
@@ -22,13 +22,13 @@ class TestAuthentication(object):
         assert resp.status_code == 201
         assert all(
             key in data
-            for key in ['id', 'email', 'fullname', 'google_id', 'image_url']
+            for key in ['id', 'email', 'username', 'google_id', 'image_url']
         )
 
     def test_register_user_by_email_with_invalid_data(self, testclient):
         # Only the last combination data is valid
         combine_data = {
-            'fullname': [None, '', 1234, 'jerry le'],
+            'username': [None, '', 1234, 'jerry le'],
             'email': [None, '', 'not a email', 'test@gmail.com'],
             'password': [None, '', '1234567', '12345678']
         }

@@ -1,4 +1,5 @@
-from main.extensions import db, Model
+from main.databases import Model
+from main.extensions import db
 
 
 class CatalogModel(Model):
