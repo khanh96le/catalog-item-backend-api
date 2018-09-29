@@ -4,7 +4,7 @@ from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError
 from main.extensions import cors, db, bcrypt, migrate, jwt
-from main.views import catalog, user
+from main.views import catalog, user, article
 
 
 def create_app(config_object=ProdConfig):
@@ -46,6 +46,7 @@ def register_blueprints(app):
     # Register all endpoints in `main.views`
     app.register_blueprint(catalog.blueprint)
     app.register_blueprint(user.blueprint)
+    app.register_blueprint(article.blueprint)
 
 
 def register_error_handlers(app):

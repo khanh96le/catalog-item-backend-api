@@ -2,6 +2,7 @@
 from datetime import datetime
 
 from flask_sqlalchemy import Model
+from sqlalchemy.orm import relationship
 
 from main.extensions import db
 
@@ -36,19 +37,15 @@ class CRUDMixin(Model):
         return commit and db.session.commit()
 
 
-db.Model = db.make_declarative_base(CRUDMixin, None)
-Model = db.Model
-
-
 class TimestampMixin(object):
     """Inherit this class to automatically create 2 fields: `created_at` and
     `updated_at` in the database.  The `updated_at` is updated whenever any
     fields changed.
     """
 
-    created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    updated = db.Column(db.DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow,
+                           onupdate=datetime.utcnow, nullable=False)
 
 
 class PKMixin(object):
@@ -61,3 +58,8 @@ class PKMixin(object):
     """
 
     id = db.Column(db.Integer, primary_key=True)
+
+
+db.Model = db.make_declarative_base(CRUDMixin, None)
+Model = db.Model
+relationship = relationship

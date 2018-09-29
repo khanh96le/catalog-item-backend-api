@@ -5,6 +5,7 @@ import pytest
 from main.app import create_app
 from main.config import TestConfig
 from main.extensions import db
+from main.models.user import UserModel
 from tests.utils import TestClient
 
 
@@ -61,3 +62,15 @@ def session(test_app):
 
     db.session.close()
     db.drop_all()
+
+
+@pytest.fixture(scope='function')
+def user(session):
+    user = UserModel(
+        username='username',
+        email='test@email.com',
+        password='12345678@ABC',
+    )
+    session.add(user)
+    session.commit()
+    return user

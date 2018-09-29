@@ -44,3 +44,7 @@ class TestClient(object):
             data=json.dumps(data),
             content_type=content_type
         )
+
+
+def create_user():
+    pass
