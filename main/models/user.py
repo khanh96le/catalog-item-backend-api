@@ -11,8 +11,8 @@ class UserModel(Model, PKMixin, TimestampMixin):
     password = db.Column(db.String(256))
     password_salt = db.Column(db.String(64))
     google_id = db.Column(db.String(32), unique=True)
-    image_url = db.Column(db.String(500))
-    token = db.Column(db.String(256))
+    image_url = db.Column(db.String(512))
+    token = db.Column(db.String(512))
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)

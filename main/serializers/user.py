@@ -13,6 +13,7 @@ class UserSchema(BaseSchema):
                              validate=validate.Length(min=8))
     google_id = fields.String()
     image_url = fields.String()
+    token = fields.String()
 
 
 class SignInEmailSchema(BaseSchema):

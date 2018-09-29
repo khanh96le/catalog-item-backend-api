@@ -14,14 +14,14 @@ class BaseSchema(Schema):
         """Log and raise our custom exception when (de)serialization fails."""
 
         logging.error(error.messages)
-        raise InvalidSchema.invalid_schema(error.message)
+        raise InvalidSchema.invalid_schema(error.messages)
 
     class Meta:
         strict = True
 
     @post_dump
     def prevent_xss(self, data):
-        for k, v in data.iteritems():
+        for k, v in data.items():
             try:
                 data[k] = bleach.clean(v)
             except TypeError:

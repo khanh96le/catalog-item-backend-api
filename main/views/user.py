@@ -1,7 +1,12 @@
+from datetime import timedelta
+
 from flask import Blueprint
 from flask_apispec import use_kwargs, marshal_with
+from flask_jwt_extended import create_access_token
+from sqlalchemy.exc import IntegrityError
 
 from main.exceptions import InvalidUsage, AuthenticationError
+from main.extensions import db
 from main.models.user import UserModel
 from main.serializers.user import UserSchema, SignInEmailSchema
 
@@ -14,12 +19,13 @@ blueprint = Blueprint('user', __name__)
 def register_user_by_email(**kwargs):
     """Register user by email password."""
 
-    # Verify email
-    user = UserModel.query.filter_by(email=kwargs.get('email')).one_or_none()
-    if user:
+    try:
+        user = UserModel(**kwargs).save()
+    except IntegrityError:
+        db.session.rollback()
         raise InvalidUsage.user_already_existed()
 
-    return UserModel(**kwargs).save(), 201
+    return user, 201
 
 
 @blueprint.route('/users/auth/email', methods=('POST',))
@@ -30,10 +36,11 @@ def sign_in_by_email(**kwargs):
 
     user = UserModel.query.filter_by(email=kwargs['email']).one_or_none()
     if user and user.check_password(kwargs['password']):
+        user.token = create_access_token(
+            identity=user.id, fresh=True, expires_delta=timedelta(days=365))
         return user
 
     raise AuthenticationError.login_by_email_fail()
-
 
 # @blueprint.route('/users/auth/google', methods=('POST',))
 # def register_user_with_google():

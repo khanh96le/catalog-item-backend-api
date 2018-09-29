@@ -22,8 +22,13 @@ class TestAuthentication(object):
         assert resp.status_code == 201
         assert all(
             key in data
-            for key in ['id', 'email', 'username', 'google_id', 'image_url']
+            for key in ['id', 'email', 'username', 'google_id', 'image_url',
+                        'token']
         )
+
+        # Register with existing email
+        resp = _register_user(testclient)
+        assert resp.status_code == 404
 
     def test_register_user_by_email_with_invalid_data(self, testclient):
         # Only the last combination data is valid

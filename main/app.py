@@ -3,7 +3,7 @@ from flask import Flask
 from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError
-from main.extensions import cors, db, bcrypt, migrate
+from main.extensions import cors, db, bcrypt, migrate, jwt
 from main.views import catalog, user
 
 
@@ -33,6 +33,7 @@ def register_extensions(app):
     db.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
 
 
 def register_blueprints(app):
