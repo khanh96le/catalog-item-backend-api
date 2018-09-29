@@ -1,12 +1,12 @@
-from main.databases import Model
+from main.databases import Model, TimestampMixin, PKMixin
 from main.extensions import db
 
 
-class CatalogModel(Model):
+class CatalogModel(Model, PKMixin, TimestampMixin):
     __tablename__ = 'catalog'
 
-    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
+
     # items = db.relationship('ItemModel', lazy='dynamic')
 
     def __init__(self, *args, **kwargs):

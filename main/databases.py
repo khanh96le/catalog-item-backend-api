@@ -49,3 +49,15 @@ class TimestampMixin(object):
     created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated = db.Column(db.DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow, nullable=False)
+
+
+class PKMixin(object):
+    """
+    From Mike Bayer's "Building the app" talk
+    https://speakerdeck.com/zzzeek/building-the-app
+
+    A mixin that adds a surrogate integer 'primary key' column named ``id`` to
+    any declarative-mapped class.
+    """
+
+    id = db.Column(db.Integer, primary_key=True)

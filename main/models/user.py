@@ -1,12 +1,11 @@
-from main.databases import Model
+from main.databases import Model, PKMixin, TimestampMixin
 from main.extensions import db
 from main.libs import bcrypt_custom
 
 
-class UserModel(Model):
+class UserModel(Model, PKMixin, TimestampMixin):
     __tablename__ = 'user'
 
-    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(256))
     email = db.Column(db.String(128), unique=True)
     password = db.Column(db.String(256))
