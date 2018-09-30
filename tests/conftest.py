@@ -5,6 +5,7 @@ import pytest
 from main.app import create_app
 from main.config import TestConfig
 from main.extensions import db
+from main.libs import bcrypt_custom
 from main.models.user import UserModel
 from tests.utils import TestClient
 
@@ -69,8 +70,11 @@ def user(session):
     user = UserModel(
         username='username',
         email='test@email.com',
-        password='12345678@ABC',
     )
+    password = '12345678@ABC'
+    user.password, user.password_salt = \
+        bcrypt_custom.generate_password_hash(password)
+
     session.add(user)
     session.commit()
     return user

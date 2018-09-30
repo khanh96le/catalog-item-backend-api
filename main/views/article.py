@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint
 from flask_apispec import use_kwargs, marshal_with
+from flask_jwt_extended import jwt_required, current_user
 from sqlalchemy.exc import IntegrityError
 
 from main.exceptions import InvalidUsage
@@ -12,10 +13,12 @@ blueprint = Blueprint('article', __name__)
 
 
 @blueprint.route('/articles', methods=['POST'])
+@jwt_required
 @use_kwargs(ArticleSchema())
 @marshal_with(ArticleSchema())
 def create_article(**kwargs):
     try:
+        kwargs['user_id'] = current_user.id
         article = ArticleModel(**kwargs).save()
     except IntegrityError:
         db.session.rollback()

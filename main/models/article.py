@@ -1,3 +1,5 @@
+import os
+
 from slugify import slugify
 
 from main.databases import Model, PKMixin, TimestampMixin, relationship
@@ -14,8 +16,14 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
     user = relationship('UserModel', backref=db.backref('articles'))
 
     def __init__(self, *args, **kwargs):
-        if not kwargs.get('slug'):
-            # If users doesn't specify the slug, we will generate it for them
-            kwargs['slug'] = slugify(kwargs['title'])
+        # Check if the slug has already existed, if yes, we need to add some
+        # extra random string to the tail of slug, if no, just do slugify
+        if kwargs.get('slug'):
+            slug = kwargs.get('slug')
+        else:
+            slug = slugify(kwargs['title'])
+
+        article = ArticleModel.query.filter_by(slug=slug).one_or_none()
+        kwargs['slug'] = slug if article else slug + '-' + os.urandom(5).hex()
 
         db.Model.__init__(self, *args, **kwargs)

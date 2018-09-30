@@ -9,4 +9,12 @@ cors = CORS()
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 migrate = Migrate()
+
+
+def jwt_identity(identity):
+    from main.models.user import UserModel
+    return UserModel.query.get(identity)
+
+
 jwt = JWTManager()
+jwt.user_loader_callback_loader(jwt_identity)
