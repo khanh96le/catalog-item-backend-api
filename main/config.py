@@ -39,9 +39,6 @@ class ProdConfig(Config):
     # Allow flask restful return JSON exception
     PROPAGATE_EXCEPTIONS = True
 
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///{}' \
-    #     .format(os.path.join(basedir, 'data.db'))
-
     SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@127.0.0.1/catalog_item'
 
 
