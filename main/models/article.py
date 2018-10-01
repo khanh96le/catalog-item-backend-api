@@ -7,10 +7,10 @@ from main.extensions import db
 
 
 class ArticleModel(Model, PKMixin, TimestampMixin):
-    __tablename__ = 'item'
+    __tablename__ = 'article'
 
     title = db.Column(db.String(256), nullable=False)
-    slug = db.Column(db.Text, unique=True, nullable=False)
+    slug = db.Column(db.String(512), unique=True, nullable=False)
     content = db.Column(db.Text)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     user = relationship('UserModel', backref=db.backref('articles'))
