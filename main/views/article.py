@@ -25,3 +25,57 @@ def create_article(**kwargs):
         raise InvalidUsage.article_slug_already_existed()
 
     return article, 201
+
+
+@blueprint.route('/articles', methods=['GET'])
+@marshal_with(ArticleSchema(many=True))
+def get_articles():
+    articles = ArticleModel.query.all()
+    return articles
+
+
+@blueprint.route('/articles/<slug>', methods=['GET'])
+@marshal_with(ArticleSchema())
+def get_article(slug):
+    article = ArticleModel.query.filter_by(slug=slug).first_or_404()
+    return article
+
+
+@blueprint.route('/articles/<slug>', methods=['PUT'])
+@jwt_required
+@use_kwargs(ArticleSchema())
+@marshal_with(ArticleSchema())
+def update_article(slug, **kwargs):
+    article = ArticleModel.query.filter_by(
+        slug=slug, user_id=current_user.id
+    ).one_or_none()
+
+    if not article:
+        raise InvalidUsage.article_not_found()
+
+    try:
+        article.update(**kwargs)
+    except IntegrityError:
+        db.session.rollback()
+        raise InvalidUsage.article_slug_already_existed()
+
+    return article
+
+
+@blueprint.route('/articles/<slug>', methods=['DELETE'])
+@jwt_required
+def delete_article(slug):
+    article = ArticleModel.query.filter_by(
+        slug=slug, user_id=current_user.id
+    ).one_or_none()
+
+    if not article:
+        raise InvalidUsage.article_not_found()
+
+    try:
+        article.delete()
+    except IntegrityError:
+        db.session.rollback()
+        raise IntegrityError
+
+    return '', 204
