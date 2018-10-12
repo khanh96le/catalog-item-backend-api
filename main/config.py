@@ -16,9 +16,9 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Allow cross-origin resource sharing on these urls
-    CORS_ORIGIN_WHITELIST = [
-        'http://0.0.0.0:5000'
-    ]
+    # CORS_ORIGIN_WHITELIST = [
+    #     'http://0.0.0.0:5001'
+    # ]
 
 
 class DevConfig(Config):
