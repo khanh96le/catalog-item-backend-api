@@ -1,6 +1,7 @@
-from main.databases import Model, PKMixin, TimestampMixin
+from main.databases import Model, PKMixin, TimestampMixin, relationship
 from main.extensions import db
 from main.libs import bcrypt_custom
+from main.models.assoc_tables import user_role, user_permission, user_control
 
 
 class UserModel(Model, PKMixin, TimestampMixin):
@@ -13,6 +14,16 @@ class UserModel(Model, PKMixin, TimestampMixin):
     google_id = db.Column(db.String(32), unique=True)
     image_url = db.Column(db.String(512))
     token = db.Column(db.String(512))
+
+    # Many to many
+    permissions = relationship('PermissionModel', secondary=user_permission)
+    controls = relationship('ControlModel', secondary=user_control)
+    roles = relationship('RoleModel', secondary=user_role)
+
+    # One to many
+    articles = relationship('ArticleModel', db.backref('user'))
+    comments = relationship('CommentModel', db.backref('user'))
+    logs = relationship('LogModel', db.backref('user'))
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)

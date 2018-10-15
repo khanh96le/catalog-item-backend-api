@@ -13,7 +13,8 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
     slug = db.Column(db.String(512), unique=True, nullable=False)
     content = db.Column(db.Text)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
-    user = relationship('UserModel', backref=db.backref('articles'))
+
+    comments = relationship('CommentModel', db.backref('article'))
 
     def __init__(self, *args, **kwargs):
         # Check if the slug has already existed, if yes, we need to add some
