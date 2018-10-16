@@ -42,3 +42,8 @@ pip install -r requrements.txt
 ```
 (flask-env) flask urls
 ```
+
+
+## TODO
+- [] Add flask-login
+- [] Protect endpoints by checking permissions
