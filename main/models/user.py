@@ -21,9 +21,9 @@ class UserModel(Model, PKMixin, TimestampMixin):
     roles = relationship('RoleModel', secondary=user_role)
 
     # One to many
-    articles = relationship('ArticleModel', db.backref('user'))
-    comments = relationship('CommentModel', db.backref('user'))
-    logs = relationship('LogModel', db.backref('user'))
+    articles = relationship('ArticleModel', back_populates='user')
+    comments = relationship('CommentModel', backref=db.backref('user'))
+    logs = relationship('LogModel', backref=db.backref('user'))
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)

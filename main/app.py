@@ -3,8 +3,17 @@ from flask import Flask
 from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError
-from main.extensions import cors, db, bcrypt, migrate, jwt
+from main.extensions import cors, db, bcrypt, migrate, jwt, admin
+from main.models.article import ArticleModel
+from main.models.catalog import CatalogModel
+from main.models.comment import CommentModel
+from main.models.control import ControlModel
+from main.models.log import LogModel
+from main.models.permission import PermissionModel
+from main.models.role import RoleModel
+from main.models.user import UserModel
 from main.views import catalog, user, article
+from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, UserModelView, ArticleModelView
 
 
 def create_app(config_object=ProdConfig):
@@ -34,6 +43,22 @@ def register_extensions(app):
     bcrypt.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    register_admin_views()
+    admin.init_app(app)
+
+
+def register_admin_views():
+    """Register all admin views. This seem pretty awkward."""
+
+    admin.add_view(UserModelView(UserModel, db.session))
+    admin.add_view(ArticleModelView(ArticleModel, db.session))
+    admin.add_view(BaseModelView(CatalogModel, db.session))
+    admin.add_view(BaseModelView(CommentModel, db.session))
+    admin.add_view(BaseModelView(LogModel, db.session))
+    admin.add_view(RoleModelView(RoleModel, db.session))
+    admin.add_view(PermissionModelView(PermissionModel, db.session))
+    admin.add_view(BaseModelView(ControlModel, db.session))
 
 
 def register_blueprints(app):

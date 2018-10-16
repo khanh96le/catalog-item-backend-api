@@ -10,8 +10,15 @@ class RoleModel(Model, PKMixin, TimestampMixin):
     name = db.Column(db.String(64))
     description = db.Column(db.String(256))
 
-    permissions = relationship('PermissionModel', secondary=role_permission)
+    permissions = relationship(
+        'PermissionModel',
+        secondary=role_permission,
+        back_populates='roles')
+
     controls = relationship('ControlModel', secondary=role_control)
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)
+
+    def __repr__(self):
+        return self.name

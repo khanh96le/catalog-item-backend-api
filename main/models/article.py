@@ -11,10 +11,14 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
 
     title = db.Column(db.String(256), nullable=False)
     slug = db.Column(db.String(512), unique=True, nullable=False)
-    content = db.Column(db.Text)
-    user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
 
-    comments = relationship('CommentModel', db.backref('article'))
+    # One to many
+    user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
+    user = relationship('UserModel', back_populates='articles')
+
+    # Many to many
+    comments = relationship('CommentModel', backref=db.backref('article'))
 
     def __init__(self, *args, **kwargs):
         # Check if the slug has already existed, if yes, we need to add some
