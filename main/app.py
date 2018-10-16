@@ -18,6 +18,7 @@ from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, 
 
 def create_app(config_object=ProdConfig):
     """Application factory to produce application instance.
+    http://flask.pocoo.org/docs/patterns/appfactories/.
 
     Args:
         config_object (object): the configuration loaded from `main.config`
@@ -25,14 +26,26 @@ def create_app(config_object=ProdConfig):
     """
 
     app = Flask(__name__)
+
     # Ignore trailing slash in flask route
     # https://stackoverflow.com/questions/40365390/trailing-slash-in-flask-route
     app.url_map.strict_slashes = False
+
+    # App settings
     app.config.from_object(config_object)
+
+    # Register all extensions which are used in this application
     register_extensions(app)
+
+    # Expose endpoints to the world
     register_blueprints(app)
+
+    # Errors should be thrown in the same format
     register_error_handlers(app)
+
+    # Some handy commands
     register_commands(app)
+
     return app
 
 
@@ -67,6 +80,8 @@ def register_blueprints(app):
     # Allow CORS
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
     cors.init_app(catalog.blueprint, origins=origins)
+    cors.init_app(article.blueprint, origins=origins)
+    cors.init_app(user.blueprint, origins=origins)
 
     # Register all endpoints in `main.views`
     app.register_blueprint(catalog.blueprint)

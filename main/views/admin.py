@@ -59,3 +59,10 @@ class ArticleModelView(BaseModelView):
 
     def __init__(self, model, session):
         super().__init__(model, session)
+
+
+class CatalogModel(BaseModelView):
+    column_list = ('id', 'created_at', 'updated_at', 'name', 'description')
+
+    def __init__(self, model, session):
+        super().__init__(model, session)

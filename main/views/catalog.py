@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from flask_apispec import use_kwargs, marshal_with
 
 from main.exceptions import InvalidUsage
@@ -54,9 +54,8 @@ def create_catalog(**kwargs):
 
 
 @blueprint.route('/catalogs', methods=('GET',))
-@marshal_with(CatalogSchema(many=True))
 def get_catalogs():
-    catalogs = CatalogModel.query.all()
     # TODO: paging, sorting, filtering, field selection
     # https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/
-    return catalogs
+    catalogs = CatalogModel.query.all()
+    return jsonify({'tags': [catalog.name for catalog in catalogs]})

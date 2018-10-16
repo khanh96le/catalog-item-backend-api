@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from marshmallow import fields, validate
+from marshmallow import fields, validate, post_dump
 
 from .base import BaseSchema
 
@@ -14,6 +14,10 @@ class UserSchema(BaseSchema):
     google_id = fields.String()
     image_url = fields.String()
     token = fields.String()
+
+    @post_dump()
+    def make_comment(self, data):
+        return {'user': data}
 
 
 class SignInEmailSchema(BaseSchema):
