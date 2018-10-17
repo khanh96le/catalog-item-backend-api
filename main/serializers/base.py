@@ -3,8 +3,7 @@
 
 import logging
 
-import bleach
-from marshmallow import Schema, post_dump
+from marshmallow import Schema
 
 from main.exceptions import InvalidSchema
 
@@ -19,11 +18,11 @@ class BaseSchema(Schema):
     class Meta:
         strict = True
 
-    @post_dump
-    def prevent_xss(self, data):
-        for k, v in data.items():
-            try:
-                data[k] = bleach.clean(v)
-            except TypeError:
-                logging.warning('Cannot clean content {}'.format(v))
-        return data
+    # @post_dump
+    # def prevent_xss(self, data):
+    #     for k, v in data.items():
+    #         try:
+    #             data[k] = bleach.clean(v)
+    #         except TypeError:
+    #             logging.warning('Cannot clean content {}'.format(v))
+    #     return data

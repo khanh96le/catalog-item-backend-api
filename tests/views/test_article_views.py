@@ -4,9 +4,11 @@ import json
 
 def _create_article(testclient, user):
     data = {
-        'title': 'This is a blog ...',
-        'content': 'This is the blog content ...',
-        'user_id': user['id']
+        'article':
+            {
+                'title': 'This is a blog ...',
+                'body': 'This is the blog content ...',
+            }
     }
     headers = {
         'Authorization': 'Bearer {}'.format(user['token'])
@@ -18,7 +20,7 @@ def _create_article(testclient, user):
 class TestArticleView(object):
     @staticmethod
     def user_create_article(testclient, user):
-        resp = _create_article(testclient, user)
+        resp = _create_article(testclient, user['user'])
         article = json.loads(resp.data)
         assert all(
             key in article

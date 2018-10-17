@@ -9,7 +9,8 @@ class CatalogModel(Model, PKMixin, TimestampMixin):
     name = db.Column(db.String(80))
     description = db.Column(db.String(256))
 
-    articles = relationship('ArticleModel', secondary=catalog_article)
+    articles = relationship('ArticleModel', secondary=catalog_article,
+                            back_populates='catalogs')
 
     def __init__(self, *args, **kwargs):
         db.Model.__init__(self, *args, **kwargs)

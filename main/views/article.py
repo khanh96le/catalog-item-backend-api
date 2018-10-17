@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from main.exceptions import InvalidUsage
 from main.extensions import db
 from main.models.article import ArticleModel
-from main.serializers.article import ArticleSchema
+from main.serializers.article import ArticleSchema, ArticleSchemas
 
 blueprint = Blueprint('article', __name__)
 
@@ -28,9 +28,17 @@ def create_article(**kwargs):
 
 
 @blueprint.route('/articles', methods=['GET'])
-@marshal_with(ArticleSchema(many=True))
+@marshal_with(ArticleSchemas(many=True))
 def get_articles():
     articles = ArticleModel.query.all()
+    return articles
+
+
+@blueprint.route('/articles/feed', methods=['GET'])
+@jwt_required
+@marshal_with(ArticleSchemas(many=True))
+def get_feed():
+    articles = ArticleModel.query.filter_by(user_id=current_user.id).all()
     return articles
 
 

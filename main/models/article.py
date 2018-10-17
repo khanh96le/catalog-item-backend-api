@@ -4,6 +4,7 @@ from slugify import slugify
 
 from main.databases import Model, PKMixin, TimestampMixin, relationship
 from main.extensions import db
+from main.models.assoc_tables import catalog_article
 
 
 class ArticleModel(Model, PKMixin, TimestampMixin):
@@ -11,7 +12,7 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
 
     title = db.Column(db.String(256), nullable=False)
     slug = db.Column(db.String(512), unique=True, nullable=False)
-    content = db.Column(db.Text, nullable=False)
+    body = db.Column(db.Text, nullable=False)
 
     # One to many
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
@@ -19,6 +20,8 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
 
     # Many to many
     comments = relationship('CommentModel', backref=db.backref('article'))
+    catalogs = relationship('CatalogModel', secondary=catalog_article,
+                            back_populates='articles')
 
     def __init__(self, *args, **kwargs):
         # Check if the slug has already existed, if yes, we need to add some
