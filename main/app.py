@@ -12,7 +12,7 @@ from main.models.log import LogModel
 from main.models.permission import PermissionModel
 from main.models.role import RoleModel
 from main.models.user import UserModel
-from main.views import catalog, user, article
+from main.views import catalog, user, article, comment
 from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, UserModelView, ArticleModelView
 
 
@@ -82,11 +82,13 @@ def register_blueprints(app):
     cors.init_app(catalog.blueprint, origins=origins)
     cors.init_app(article.blueprint, origins=origins)
     cors.init_app(user.blueprint, origins=origins)
+    cors.init_app(comment.blueprint, origins=origins)
 
     # Register all endpoints in `main.views`
     app.register_blueprint(catalog.blueprint)
     app.register_blueprint(user.blueprint)
     app.register_blueprint(article.blueprint)
+    app.register_blueprint(comment.blueprint)
 
 
 def register_error_handlers(app):
