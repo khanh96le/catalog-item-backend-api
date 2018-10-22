@@ -23,7 +23,7 @@ class UserModel(Model, PKMixin, TimestampMixin):
 
     # One to many
     articles = relationship('ArticleModel', back_populates='user')
-    comments = relationship('CommentModel', backref=db.backref('user'))
+    comments = relationship('CommentModel', back_populates='user')
     logs = relationship('LogModel', backref=db.backref('user'))
 
     def __init__(self, *args, **kwargs):

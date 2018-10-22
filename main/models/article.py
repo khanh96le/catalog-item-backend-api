@@ -20,7 +20,7 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
     user = relationship('UserModel', back_populates='articles')
 
     # Many to many
-    comments = relationship('CommentModel', backref=db.backref('article'))
+    comments = relationship('CommentModel', back_populates='article')
     catalogs = relationship('CatalogModel', secondary=catalog_article,
                             back_populates='articles')
 
