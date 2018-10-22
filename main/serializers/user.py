@@ -14,6 +14,7 @@ class UserSchema(BaseSchema):
     google_id = fields.String()
     image_url = fields.String()
     token = fields.String()
+    bio = fields.String()
 
     @post_dump()
     def make_comment(self, data):

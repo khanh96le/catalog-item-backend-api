@@ -7,6 +7,7 @@ from main.serializers.user import UserSchema
 
 class ArticleSchema(BaseSchema):
     title = fields.String(required=True)
+    description = fields.String()
     slug = fields.String()
     body = fields.String(required=True)
 
