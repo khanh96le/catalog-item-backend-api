@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from main.exceptions import InvalidUsage
 from main.extensions import db
 from main.models.article import ArticleModel
+from main.permissions import check_permission
 from main.serializers.article import ArticleSchema, ArticleSchemas
 
 blueprint = Blueprint('article', __name__)
@@ -14,6 +15,7 @@ blueprint = Blueprint('article', __name__)
 
 @blueprint.route('/articles', methods=['POST'])
 @jwt_required
+@check_permission('create', 'article')
 @use_kwargs(ArticleSchema())
 @marshal_with(ArticleSchema())
 def create_article(**kwargs):

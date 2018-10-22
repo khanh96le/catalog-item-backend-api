@@ -39,6 +39,9 @@ USER_ALREADY_EXISTED = template('User has already existed', status_code=404)
 LOGIN_BY_EMAIL_FAIL = template('Email or password is not correct!',
                                status_code=404)
 
+#: Authorization errors
+INVALID_PERMISSION = template('No permissions!', status_code=403)
+
 
 class BaseError(Exception):
     def __init__(self, **kwargs):
@@ -100,3 +103,12 @@ class AuthenticationError(BaseError):
     @classmethod
     def login_by_email_fail(cls):
         return cls(**LOGIN_BY_EMAIL_FAIL)
+
+
+class AuthorizationError(BaseError):
+    def __init__(self, **kwargs):
+        BaseError.__init__(self, **kwargs)
+
+    @classmethod
+    def invalid_permission(cls):
+        return cls(**INVALID_PERMISSION)
