@@ -9,6 +9,7 @@ class UserModel(Model, PKMixin, TimestampMixin):
 
     username = db.Column(db.String(256))
     email = db.Column(db.String(128), unique=True)
+    bio = db.Column(db.Text)
     password = db.Column(db.String(256))
     password_salt = db.Column(db.String(64))
     google_id = db.Column(db.String(32), unique=True)
@@ -30,6 +31,9 @@ class UserModel(Model, PKMixin, TimestampMixin):
 
         if kwargs.get('password'):
             self.set_password(kwargs.get('password'))
+
+    def __repr__(self):
+        return self.username
 
     def set_password(self, password):
         self.password, self.password_salt = \

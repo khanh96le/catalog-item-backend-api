@@ -11,6 +11,7 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
     __tablename__ = 'article'
 
     title = db.Column(db.String(256), nullable=False)
+    description = db.Column(db.Text)
     slug = db.Column(db.String(512), unique=True, nullable=False)
     body = db.Column(db.Text, nullable=False)
 
