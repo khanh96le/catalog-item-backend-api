@@ -7,3 +7,7 @@ rm -rf migrations
 flask db init
 flask db migrate
 flask db upgrade
+
+# Dump old database
+cd /Users/jerryle/Projects/school/web-nang-cao
+mysql --user="root" --password="123456" catalog_item < catalog_item_2018-10-24.sql

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from marshmallow import fields, post_dump
+from marshmallow import fields, post_dump, pre_load
 
 from main.serializers.base import BaseSchema
 from main.serializers.user import UserSchema
@@ -19,8 +19,17 @@ class CommentSchema(BaseSchema):
         data['author'] = data['user']['user']
         return {'comment': data}
 
+    @pre_load
+    def load_data(self, data):
+        return data['comment']
+
 
 class CommentsSchema(CommentSchema):
+    @post_dump
+    def dump_comment(self, data):
+        data['author'] = data['user']['user']
+        return data
+
     @post_dump(pass_many=True)
     def dump_comments(self, data, many):
         return {'comments': data, 'commentsCount': len(data)}

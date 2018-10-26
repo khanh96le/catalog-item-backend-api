@@ -7,7 +7,7 @@ from main.extensions import db
 class CommentModel(Model, PKMixin, TimestampMixin):
     __tablename__ = 'comment'
 
-    body = db.Text()
+    body = db.Column(db.String(1024), nullable=False)
 
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
     user = relationship('UserModel', back_populates='comments')
