@@ -31,6 +31,9 @@ SLUG_ALREADY_EXISTED = template('The slug is already existed. Please choose the 
                                 'automatically for you', status_code=404)
 ARTICLE_NOT_FOUND = template('The article is not found.', status_code=404)
 
+#: Comment errors
+COMMENT_NOT_FOUND = template('The comment is not found.', status_code=404)
+
 #: User errors
 USER_NOT_FOUND = template('User not found', status_code=404)
 USER_ALREADY_EXISTED = template('User has already existed', status_code=404)
@@ -85,6 +88,10 @@ class InvalidUsage(BaseError):
     @classmethod
     def article_not_found(cls):
         return cls(**ARTICLE_NOT_FOUND)
+
+    @classmethod
+    def comment_not_found(cls):
+        return cls(**COMMENT_NOT_FOUND)
 
 
 class InvalidSchema(BaseError):

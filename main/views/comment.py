@@ -47,3 +47,26 @@ def create_comment(slug, **kwargs):
         raise InvalidUsage.unknown_error()
 
     return comment, 201
+
+
+@blueprint.route('/articles/<slug>/comments/<comment_id>', methods=['DELETE'])
+@jwt_required
+@check_permission('delete', 'comment')
+def delete_comment(slug, comment_id, **kwargs):
+    article = ArticleModel.query.filter_by(
+        slug=slug, user_id=current_user.id
+    ).one_or_none()
+    if not article:
+        raise InvalidUsage.article_not_found()
+
+    comment = CommentModel.query.get(comment_id)
+    if not comment:
+        raise InvalidUsage.comment_not_found()
+
+    try:
+        comment.delete()
+    except IntegrityError:
+        db.session.rollback()
+        raise IntegrityError
+
+    return '', 204
