@@ -42,6 +42,12 @@ class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:123456@127.0.0.1/catalog_item?charset=utf8'
     # SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
+    # set optional bootswatch theme
+    # For more detail watch here: http://bootswatch.com/3/
+    # options: cosmo, cyborg, darkly, flatly, journal, lumen, paper, readable,
+    # sandstone, simplex, spacelab
+    FLASK_ADMIN_SWATCH = 'spacelab'
+
 
 config = {
     'develop': DevConfig,

@@ -33,6 +33,10 @@ class ArticleModel(Model, PKMixin, TimestampMixin):
             slug = slugify(kwargs['title'])
 
         article = ArticleModel.query.filter_by(slug=slug).one_or_none()
-        kwargs['slug'] = slug if article else slug + '-' + os.urandom(5).hex()
+        kwargs['slug'] = slug if not article else self._generate_unique_slug(slug)
 
         db.Model.__init__(self, *args, **kwargs)
+
+    @staticmethod
+    def _generate_unique_slug(slug):
+        return slug + '-' + os.urandom(5).hex()
