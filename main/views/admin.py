@@ -29,6 +29,9 @@ class RoleModelView(BaseModelView):
                    'permissions', 'controls')
     column_searchable_list = ('name', 'id')
 
+    def is_accessible(self):
+        return True
+
     def __init__(self, model, session):
         super().__init__(model, session)
 
@@ -38,6 +41,9 @@ class PermissionModelView(BaseModelView):
                    'description', 'roles')
     column_searchable_list = ('id', 'action', 'resource')
 
+    def is_accessible(self):
+        return True
+
     def __init__(self, model, session):
         super().__init__(model, session)
 
@@ -46,6 +52,9 @@ class UserModelView(BaseModelView):
     column_list = ('id', 'created_at', 'updated_at', 'username', 'email',
                    'google_id', 'image_url', 'roles', 'permissions')
     column_searchable_list = ('id', 'username', 'email')
+
+    def is_accessible(self):
+        return True
 
     def __init__(self, model, session):
         super().__init__(model, session)
@@ -57,12 +66,18 @@ class ArticleModelView(BaseModelView):
     can_create = False
     can_edit = False
 
+    def is_accessible(self):
+        return True
+
     def __init__(self, model, session):
         super().__init__(model, session)
 
 
 class CatalogModel(BaseModelView):
     column_list = ('id', 'created_at', 'updated_at', 'name', 'description')
+
+    def is_accessible(self):
+        return True
 
     def __init__(self, model, session):
         super().__init__(model, session)
