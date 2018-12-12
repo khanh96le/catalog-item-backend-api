@@ -10,5 +10,6 @@ flask db upgrade
 
 # Dump old database
 cd /Users/jerryle/Projects/school/web-nang-cao
-mysql --user="root" --password="123456" catalog_item < catalog_item_user_role.sql
+mysql --user="root" --password="123456" catalog_item < catalog_item_user_role_add_action.sql
+#mysql --user="root" --password="123456" catalog_item < catalog_item_user_role.sql
 #mysql --user="root" --password="123456" catalog_item < catalog_item_mobile.sql

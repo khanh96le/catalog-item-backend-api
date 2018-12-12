@@ -37,9 +37,9 @@ class RoleModelView(BaseModelView):
 
 
 class PermissionModelView(BaseModelView):
-    column_list = ('id', 'created_at', 'updated_at', 'action', 'resource',
+    column_list = ('id', 'created_at', 'updated_at', 'resource',
                    'description', 'roles')
-    column_searchable_list = ('id', 'action', 'resource')
+    column_searchable_list = ('id', 'resource')
 
     def is_accessible(self):
         return True
@@ -73,8 +73,18 @@ class ArticleModelView(BaseModelView):
         super().__init__(model, session)
 
 
-class CatalogModel(BaseModelView):
+class CatalogModelView(BaseModelView):
     column_list = ('id', 'created_at', 'updated_at', 'name', 'description')
+
+    def is_accessible(self):
+        return True
+
+    def __init__(self, model, session):
+        super().__init__(model, session)
+
+
+class ActionModelView(BaseModelView):
+    column_list = ('id', 'created_at', 'updated_at', 'name', 'permissions')
 
     def is_accessible(self):
         return True

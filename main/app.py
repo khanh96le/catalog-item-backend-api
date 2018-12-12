@@ -4,6 +4,7 @@ from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError, AuthorizationError
 from main.extensions import cors, db, bcrypt, migrate, jwt, admin
+from main.models.action import ActionModel
 from main.models.article import ArticleModel
 from main.models.catalog import CatalogModel
 from main.models.comment import CommentModel
@@ -13,7 +14,8 @@ from main.models.permission import PermissionModel
 from main.models.role import RoleModel
 from main.models.user import UserModel
 from main.views import catalog, user, article, comment
-from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, UserModelView, ArticleModelView
+from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, UserModelView, ArticleModelView, \
+    ActionModelView
 
 
 def create_app(config_object=ProdConfig):
@@ -72,6 +74,7 @@ def register_admin_views():
     admin.add_view(RoleModelView(RoleModel, db.session))
     admin.add_view(PermissionModelView(PermissionModel, db.session))
     admin.add_view(BaseModelView(ControlModel, db.session))
+    admin.add_view(ActionModelView(ActionModel, db.session))
 
 
 def register_blueprints(app):

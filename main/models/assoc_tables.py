@@ -37,3 +37,9 @@ catalog_article = db.Table(
     db.Column('catalog_id', db.Integer, db.ForeignKey('catalog.id')),
     db.Column('article_id', db.Integer, db.ForeignKey('article.id'))
 )
+
+action_permission = db.Table(
+    'action_permission',
+    db.Column('action_id', db.Integer, db.ForeignKey('action.id')),
+    db.Column('permission_id', db.Integer, db.ForeignKey('permission.id'))
+)
