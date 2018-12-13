@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_security import Security
 from flask_sqlalchemy import SQLAlchemy
 
 # Allow cross origin
@@ -20,7 +21,7 @@ bcrypt = Bcrypt()
 migrate = Migrate()
 
 # Admin panel
-admin = Admin(name='microblog', template_mode='bootstrap3')
+admin = Admin(name='microblog', base_template='my_master.html', template_mode='bootstrap3')
 
 
 def jwt_identity(identity):
@@ -40,3 +41,7 @@ login = LoginManager()
 def user_loader(id):
     from main.models.user import UserModel
     return UserModel.query.get(id)
+
+
+# Flask-security
+security = Security()

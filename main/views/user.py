@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import flask
 import flask_login
-from flask import Blueprint
+from flask import Blueprint, render_template
 from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import create_access_token, jwt_required, current_user
 from sqlalchemy.exc import IntegrityError
@@ -136,3 +136,9 @@ def login():
         return flask.redirect('http://localhost:5002/admin')
 
     return 'Bad request'
+
+
+# Flask views
+@blueprint.route('/')
+def index():
+    return render_template('index.html')

@@ -4,6 +4,7 @@ This module defines the ModelView classes. ModelView classes decides how the
 data in Admin page is shown
 """
 import flask_login
+from flask_admin import BaseView, expose
 from flask_admin.contrib.sqla import ModelView
 from werkzeug.utils import redirect
 
@@ -94,3 +95,9 @@ class ActionModelView(BaseModelView):
 
     def __init__(self, model, session):
         super().__init__(model, session)
+
+
+class CustomView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/custom_index.html')

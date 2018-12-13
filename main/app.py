@@ -1,9 +1,12 @@
+import os
+
 from flask import Flask
+from flask_security import SQLAlchemyUserDatastore
 
 from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError, AuthorizationError
-from main.extensions import cors, db, bcrypt, migrate, jwt, admin, login
+from main.extensions import cors, db, bcrypt, migrate, jwt, admin, login, security
 from main.models.action import ActionModel
 from main.models.article import ArticleModel
 from main.models.catalog import CatalogModel
@@ -15,7 +18,7 @@ from main.models.role import RoleModel
 from main.models.user import UserModel
 from main.views import catalog, user, article, comment
 from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, UserModelView, ArticleModelView, \
-    ActionModelView, CatalogModelView
+    ActionModelView, CatalogModelView, CustomView
 
 
 def create_app(config_object=ProdConfig):
@@ -27,7 +30,8 @@ def create_app(config_object=ProdConfig):
 
     """
 
-    app = Flask(__name__)
+    template_dir = os.path.abspath('./templates')
+    app = Flask(__name__, template_folder=template_dir)
 
     # Ignore trailing slash in flask route
     # https://stackoverflow.com/questions/40365390/trailing-slash-in-flask-route
@@ -63,6 +67,10 @@ def register_extensions(app):
     register_admin_views()
     admin.init_app(app)
 
+    # Register flask-security
+    user_datastore = SQLAlchemyUserDatastore(db, UserModel, RoleModel)
+    security.init_app(app, user_datastore)
+
 
 def register_admin_views():
     """Register all admin views. This seem pretty awkward."""
@@ -76,6 +84,8 @@ def register_admin_views():
     admin.add_view(PermissionModelView(PermissionModel, db.session))
     admin.add_view(BaseModelView(ControlModel, db.session))
     admin.add_view(ActionModelView(ActionModel, db.session))
+    admin.add_view(
+        CustomView(name="Custom view", endpoint='custom', menu_icon_type='fa', menu_icon_value='fa-connectdevelop', ))
 
 
 def register_blueprints(app):
