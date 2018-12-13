@@ -41,3 +41,27 @@ def check_permission(action, resource):
         return wrapper
 
     return decorator_check_permission
+
+
+def is_authenticated(current_user, resource):
+    if hasattr(current_user, 'is_authenticated'):
+        return False
+    roles = current_user.roles
+    role_permissions = []
+    for role in roles:
+        for permission in list(role.permissions):
+            role_permissions.append(permission)
+
+    # Some users have additional permissions beside the role permissions
+    user_permissions = current_user.permissions
+
+    # Make sure the combination of role permissions and user permissions
+    # is not duplicated
+    permissions = set(user_permissions + role_permissions)
+
+    # Check if current user has permission to interact with resource
+    for permission in permissions:
+        if permission.resource == resource:
+            return True
+
+    return False

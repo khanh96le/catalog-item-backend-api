@@ -43,3 +43,6 @@ class UserModel(Model, PKMixin, TimestampMixin):
         return bcrypt_custom.check_password_hash(
             self.password, self.password_salt, value
         )
+
+    def get_id(self):
+        return self.id

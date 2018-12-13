@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    # Secrete key for encoding and decoding access token
+    # Secrete key for encoding and decoding session
     # TODO: Move hard code config into ENV config
     SECRET_KEY = 'REPLACE THIS WITH SUPER SECRET KEY'
 

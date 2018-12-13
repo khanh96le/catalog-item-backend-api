@@ -3,7 +3,7 @@ from flask import Flask
 from main import commands
 from main.config import ProdConfig
 from main.exceptions import InvalidUsage, InvalidSchema, AuthenticationError, AuthorizationError
-from main.extensions import cors, db, bcrypt, migrate, jwt, admin
+from main.extensions import cors, db, bcrypt, migrate, jwt, admin, login
 from main.models.action import ActionModel
 from main.models.article import ArticleModel
 from main.models.catalog import CatalogModel
@@ -15,7 +15,7 @@ from main.models.role import RoleModel
 from main.models.user import UserModel
 from main.views import catalog, user, article, comment
 from main.views.admin import RoleModelView, BaseModelView, PermissionModelView, UserModelView, ArticleModelView, \
-    ActionModelView
+    ActionModelView, CatalogModelView
 
 
 def create_app(config_object=ProdConfig):
@@ -58,6 +58,7 @@ def register_extensions(app):
     bcrypt.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    login.init_app(app)
 
     register_admin_views()
     admin.init_app(app)
@@ -68,7 +69,7 @@ def register_admin_views():
 
     admin.add_view(UserModelView(UserModel, db.session))
     admin.add_view(ArticleModelView(ArticleModel, db.session))
-    admin.add_view(BaseModelView(CatalogModel, db.session))
+    admin.add_view(CatalogModelView(CatalogModel, db.session))
     admin.add_view(BaseModelView(CommentModel, db.session))
     admin.add_view(BaseModelView(LogModel, db.session))
     admin.add_view(RoleModelView(RoleModel, db.session))

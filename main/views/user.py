@@ -1,5 +1,7 @@
 from datetime import timedelta
 
+import flask
+import flask_login
 from flask import Blueprint
 from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import create_access_token, jwt_required, current_user
@@ -108,3 +110,29 @@ def sign_in_by_email(**kwargs):
 #
 #     return {'user': user.json(),
 #             'access_token': token.decode('utf-8')}, 200
+
+
+ADMIN_EMAIL = 'admin@gmail.com'
+ADMIN_PASSWORD = 'admin123'
+
+
+@blueprint.route('/login', methods=['GET', 'POST'])
+def login():
+    if flask.request.method == 'GET':
+        return '''
+               <form action='' method='POST'>
+                <input type='text' name='email' id='email' placeholder='email'/>
+                <input type='password' name='password' id='password' placeholder='password'/>
+                <input type='submit' name='submit'/>
+               </form>
+               '''
+    email = flask.request.form['email']
+    password = flask.request.form['password']
+
+    user = UserModel.query.filter_by(email=email).one_or_none()
+    if user and password == ADMIN_PASSWORD:
+        user.is_active = True
+        flask_login.login_user(user)
+        return flask.redirect('http://localhost:5002/admin')
+
+    return 'Bad request'
