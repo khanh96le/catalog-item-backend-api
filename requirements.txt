@@ -1,4 +1,4 @@
-Werkzeug==0.15.3
+Werkzeug==0.15.5
 SQLAlchemy==1.2.11
 Flask-Caching==1.4.0
 Flask-SQLAlchemy==2.3.2
