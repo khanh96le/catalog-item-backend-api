@@ -6,7 +6,7 @@ click==6.7
 marshmallow==2.15.4
 Flask-Bcrypt==0.7.1
 flask-apispec==0.7.0
-Flask==0.12.3
+Flask==1.0
 PyJWT==1.4.2
 Flask-JWT-Extended==3.13.0
 unicode_slugify==0.1.3
